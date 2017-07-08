@@ -132,6 +132,10 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(@NonNull Object o) throws Exception {
+                        loginBack.setClickable(false);
+                        uploadCamera.setClickable(false);
+                        uploadPhoto.setClickable(false);
+                        uploadSure.setClickable(false);
                         uploadOver.setVisibility(View.VISIBLE);
                         ScaleAnimation scaleAnimation = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                         scaleAnimation.setDuration(2000);
