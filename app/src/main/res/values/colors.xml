@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#71C3C8</color>
+    <color name="colorPrimaryDark">#71C3C8</color>
+    <color name="colorAccent">#71C3C8</color>
+    <color name="bg_text_color">#ffffff</color>
+    <color name="hint_text_color">#b7b6b6</color>
+    <color name="tabber">#71C3C8</color>
+    <color name="toast_color">#353535</color>
+    <color name="color_divider">#9b9a9a</color>
+</resources>

@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">DeChat</string>
+    <string name="register">注册</string>
+    <string name="login">登录</string>
+    <string name="user_login">用户登录</string>
+    <string name="phone_email">手机号</string>
+    <string name="tel">手机号</string>
+    <string name="core">验证码</string>
+    <string name="password">密码</string>
+    <string name="nickname">昵称</string>
+    <string name="phone_login">手机号快捷登录</string>
+    <string name="phone_register">设置手机号和密码</string>
+    <string name="phone_login_tip">手机号仅用于登录和保护账号</string>
+    <string name="obtain_core">获取验证码</string>
+    <string name="sure">确定</string>
+    <string name="user_register">新用户注册</string>
+    <string name="register_tip">注册成功后,性别不能更改</string>
+    <string name="phone_email_not_null">手机号/邮箱不能为空</string>
+    <string name="password_not_null">密码不能为空</string>
+    <string name="login_success">登录成功</string>
+    <string name="register_success">注册成功</string>
+    <string name="s_again">s重新获取</string>
+    <string name="phone_not_null">手机号不能为空</string>
+    <string name="core_not_null">验证码不能为空</string>
+    <string name="phone_style_not_right">手机号格式不正确</string>
+    <string name="phone_core">手机号是11位哦</string>
+    <string name="select_sex">请选择性别</string>
+    <string name="detail_info">详细信息</string>
+    <string name="detail_tv">请依次输入以下信息,以后可以修改</string>
+    <string name="select_area">请点击选择地区</string>
+    <string name="area">地区:</string>
+    <string name="describe">简单描述</string>
+    <string name="nickname_not_null">昵称不能为空</string>
+    <string name="intro_not_null">简单描述不能为空</string>
+    <string name="area_not_null">地区不能为空</string>
+    <string name="set_head">设置头像</string>
+    <string name="select_head">请从相册选择图片或者拍照上传</string>
+    <string name="camera">拍照</string>
+    <string name="photo">打开相册</string>
+    <string name="message">消息</string>
+    <string name="friend">好友</string>
+    <string name="fresh">发现</string>
+    <string name="me">我的</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/tabber">
+
+            <ImageView
+                android:id="@+id/login_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:alpha="0.8"
+                android:src="@drawable/btn_back" />
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            android:text="@string/set_head"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="@string/select_head"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/upload_head"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/woman_user_round_icon_default"
+
+            />
+
+        <Button
+            android:id="@+id/upload_camera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/sl_bg_login"
+            android:drawableLeft="@drawable/dynamic_praise_foc_icon_9"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="40dp"
+            android:text="@string/camera"
+            android:textColor="@color/bg_text_color" />
+
+        <Button
+            android:id="@+id/upload_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/sl_bg_login"
+            android:drawableLeft="@drawable/dynamic_praise_foc_icon_10"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="40dp"
+            android:text="@string/photo"
+            android:textColor="@color/bg_text_color" />
+
+        <Button
+            android:id="@+id/upload_sure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/sl_bg_login"
+            android:drawableLeft="@drawable/dynamic_praise_foc_icon_11"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="40dp"
+            android:text="@string/sure"
+            android:textColor="@color/bg_text_color" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/upload_over"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="74dp"
+        android:src="@drawable/accomplish_task"
+        android:visibility="gone" />
+</RelativeLayout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/welcome_bg"
+    tools:context="com.isabella.dechat.activity.SplashActivity">
+
+    <ImageView
+        android:id="@+id/iv_heart_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp" />
+
+    <Button
+        android:id="@+id/register_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.9"
+        android:textSize="20sp"
+
+        android:background="@drawable/sl_bg_register"
+        android:text="@string/register"
+
+        android:textColor="@color/bg_text_color"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@+id/iv_heart_bg"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="26dp" />
+
+    <Button
+        android:id="@+id/login_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:alpha="0.9"
+
+        android:background="@drawable/sl_bg_login"
+        android:text="@string/login"
+        android:textColor="@color/bg_text_color"
+        android:layout_alignBaseline="@+id/register_bg"
+        android:layout_alignBottom="@+id/register_bg"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp" />
+</RelativeLayout>

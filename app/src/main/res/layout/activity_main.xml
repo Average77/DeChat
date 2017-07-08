@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.isabella.dechat.activity.MainActivity">
+
+    <FrameLayout
+        android:id="@+id/container_fram_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tabber_rg_main" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="51dp"
+        android:background="@color/hint_text_color" />
+
+    <RadioGroup
+        android:id="@+id/tabber_rg_main"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:paddingTop="5dp">
+
+        <RadioButton
+            android:id="@+id/tabber_rb_message"
+            style="@style/tabber_rb"
+            android:checked="true"
+            android:drawableTop="@drawable/sl_tabber_message"
+            android:text="@string/message" />
+
+        <RadioButton
+            android:id="@+id/tabber_rb_friend"
+            style="@style/tabber_rb"
+            android:drawableTop="@drawable/sl_tabber_friend"
+            android:text="@string/friend" />
+
+        <RadioButton
+            android:id="@+id/tabber_rb_fresh"
+            style="@style/tabber_rb"
+            android:drawableTop="@drawable/sl_tabber_fresh"
+
+            android:text="@string/fresh" />
+
+        <RadioButton
+            android:id="@+id/tabber_rb_me"
+            style="@style/tabber_rb"
+            android:drawableTop="@drawable/sl_tabber_me"
+            android:text="@string/me" />
+    </RadioGroup>
+
+</RelativeLayout>
