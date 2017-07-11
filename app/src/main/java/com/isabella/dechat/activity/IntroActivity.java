@@ -109,7 +109,7 @@ public class IntroActivity extends BaseActivity<RegisterContact.RegisterView, Re
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.detail_back:
-                toActivity(PhoneRegisterActivity.class, null, 0);
+              //  toActivity(PhoneRegisterActivity.class, null, 0);
                 finish();
                 break;
             case R.id.detail_select_area:

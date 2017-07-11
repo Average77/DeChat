@@ -15,7 +15,7 @@
     <string name="sure">确定</string>
     <string name="user_register">新用户注册</string>
     <string name="register_tip">注册成功后,性别不能更改</string>
-    <string name="phone_email_not_null">手机号/邮箱不能为空</string>
+    <string name="phone_email_not_null">手机号不能为空</string>
     <string name="password_not_null">密码不能为空</string>
     <string name="login_success">登录成功</string>
     <string name="register_success">注册成功</string>

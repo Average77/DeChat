@@ -38,7 +38,6 @@ public class GlideUtils {
                 .placeholder(R.drawable.ic_album_default)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .error(R.drawable.ic_album_default)
-
                 .into(view);
 
     }

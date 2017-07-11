@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
@@ -38,8 +39,19 @@ public class SplashActivity extends IActivity {
     Button registerBg;
     @BindView(R.id.login_bg)
     Button loginBg;
+    boolean isExit;
     private AnimationDrawable drawable;
     String locationProvider;
+    Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            // TODO Auto-generated method stub
+            super.handleMessage(msg);
+            isExit = false;
+        }
+
+    };
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -65,6 +77,7 @@ public class SplashActivity extends IActivity {
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
         getLocation(this);
+        //toActivity(MainActivity.class,null,0);
         drawable = (AnimationDrawable) getResources().getDrawable(R.drawable.anim_heart_bg);
 
         //imageView.setBackground(drawable);
@@ -86,7 +99,27 @@ public class SplashActivity extends IActivity {
         registerBg.startAnimation(alphaAnimation);
         loginBg.startAnimation(alphaAnimation);
     }
-
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            exit();
+            return false;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+    public void exit(){
+        if (!isExit) {
+            isExit = true;
+            Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            mHandler.sendEmptyMessageDelayed(0, 2000);
+        } else {
+            //  Intent intent = new Intent(Intent.ACTION_MAIN);
+            // intent.addCategory(Intent.CATEGORY_HOME);
+            // startActivity(intent);
+            System.exit(0);
+        }
+    }
     @Override
     protected void onPause() {
         super.onPause();

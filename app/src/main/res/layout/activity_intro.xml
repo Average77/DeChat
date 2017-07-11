@@ -50,6 +50,7 @@
         android:layout_marginTop="30dp"
         android:hint="@string/nickname"
         android:maxLines="1"
+        android:maxLength="10"
         android:textColorHint="@color/hint_text_color" />
 
 
@@ -63,6 +64,7 @@
         android:layout_marginTop="30dp"
         android:hint="@string/describe"
         android:maxLines="1"
+        android:maxLength="30"
         android:textColorHint="@color/hint_text_color" />
     <LinearLayout
         android:layout_width="match_parent"

@@ -39,8 +39,8 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".activity.RegisterActivity" android:launchMode="singleInstance"/>
-        <activity android:name=".activity.LoginActivity"  android:launchMode="singleInstance"/>
+        <activity android:name=".activity.RegisterActivity" android:launchMode="singleTask"/>
+        <activity android:name=".activity.LoginActivity" android:launchMode="singleTask"/>
 
         <meta-data
             android:name="Mob-AppKey"

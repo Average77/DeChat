@@ -106,7 +106,9 @@ public class LoginActivity extends BaseActivity<LoginContact.LoginView, LoginPre
                             MyToast.makeText(LoginActivity.this, getString(R.string.phone_email_not_null), Toast.LENGTH_SHORT);
                         } else if (TextUtils.isEmpty(loginPassword.getText().toString())) {
                             MyToast.makeText(LoginActivity.this, getString(R.string.password_not_null), Toast.LENGTH_SHORT);
-                        } else {
+                        }  else if (loginPassword.getText().toString().length()<6) {
+                            MyToast.makeText(LoginActivity.this, "密码不能小于6位", Toast.LENGTH_SHORT);
+                        }else {
                             loginBar.setVisibility(View.VISIBLE);
                             presenter.getData(loginPhone.getText().toString(), loginPassword.getText().toString());
 

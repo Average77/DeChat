@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,7 @@ import android.view.ViewGroup;
 import com.isabella.dechat.R;
 import com.isabella.dechat.adapter.MsgRecyViewAdapter;
 import com.isabella.dechat.base.BaseFragment;
-import com.isabella.dechat.bean.NearbyPeople;
+import com.isabella.dechat.bean.NearbyDataBean;
 import com.isabella.dechat.contact.RecyclerContact;
 import com.isabella.dechat.presenter.RecyclerPresenter;
 import com.isabella.dechat.widget.SpacesItemDecoration;
@@ -21,6 +22,9 @@ import com.liaoinstan.springview.container.MeituanFooter;
 import com.liaoinstan.springview.container.MeituanHeader;
 import com.liaoinstan.springview.widget.SpringView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +41,7 @@ public class MessageFragment extends BaseFragment<RecyclerContact.RecyView, Recy
     @BindView(R.id.msg_floating)
     FloatingActionButton msgFloating;
     Unbinder unbinder;
+    List<NearbyDataBean> list=new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
     private HorizontalDividerItemDecoration horizontalDividerItemDecoration;
@@ -54,6 +59,7 @@ public class MessageFragment extends BaseFragment<RecyclerContact.RecyView, Recy
         unbinder = ButterKnife.bind(this, view);
         initView(view);
         refreshLayout.setType(SpringView.Type.FOLLOW);
+
         return view;
     }
 
@@ -71,13 +77,13 @@ public class MessageFragment extends BaseFragment<RecyclerContact.RecyView, Recy
                 if(tag == 1){
                     msgFloating.setTag(2);
                     toStaggeredGridLayoutManager();
-                    ((FloatingActionButton)v).setImageResource(R.drawable.ic_grid_mode);
+                    ((FloatingActionButton)v).setImageResource(R.drawable.ic_list_mode);
 
 
                 } else {
                     msgFloating.setTag(1);
                     toLinearLayoutManager();
-                    ((FloatingActionButton)v).setImageResource(R.drawable.ic_list_mode);
+                    ((FloatingActionButton)v).setImageResource(R.drawable.ic_grid_mode);
                 }
             }
         });
@@ -88,24 +94,32 @@ public class MessageFragment extends BaseFragment<RecyclerContact.RecyView, Recy
         adapter = new MsgRecyViewAdapter(getActivity());
         toLinearLayoutManager();
 
-        presenter.getData(page);
+        presenter.getData(System.currentTimeMillis());
 
 
         refreshLayout.setHeader(new MeituanHeader(getActivity()));
         refreshLayout.setFooter(new MeituanFooter(getActivity()));
 
         refreshLayout.setListener(new SpringView.OnFreshListener() {
+
+            private long lastTime;
+
             @Override
             public void onRefresh() {
                 System.out.println("onRefresh = " );
                 page = 1 ;
-                presenter.getData(page);
+                presenter.getData(System.currentTimeMillis());
             }
 
             @Override
             public void onLoadmore() {
+                page=2;
                 System.out.println("onLoadmore = " );
-                presenter.getData(++page);
+                if (list!=null) {
+                    lastTime = list.get(list.size()- 1).getLasttime();
+                    presenter.getData(lastTime);
+                }
+
 
             }
         });
@@ -149,8 +163,12 @@ public class MessageFragment extends BaseFragment<RecyclerContact.RecyView, Recy
     }
 
     @Override
-    public void success(NearbyPeople nearbyPeople, int page) {
-        adapter.setData(nearbyPeople,page);
+    public void success( List<NearbyDataBean> data ) {
+        refreshLayout.onFinishFreshAndLoad();
+        list.addAll(data);
+        Log.d("MessageFragment", "data.size():" + data.size());
+        adapter.setData(data,page);
+
 
     }
 

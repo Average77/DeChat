@@ -119,14 +119,19 @@ public class PhoneRegisterActivity extends IActivity {
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(@NonNull Object o) throws Exception {
+                        boolean chinaPhoneLegal = PhoneCheckUtils.isChinaPhoneLegal(phoneRegisterPhone.getText().toString().trim());
                         if (TextUtils.isEmpty(phoneRegisterPhone.getText().toString())) {
                             MyToast.makeText(PhoneRegisterActivity.this, getString(R.string.phone_not_null), Toast.LENGTH_SHORT);
                         } else if (TextUtils.isEmpty(phoneRegisterCore.getText().toString())) {
                             MyToast.makeText(PhoneRegisterActivity.this, getString(R.string.core_not_null), Toast.LENGTH_SHORT);
                         } else if (TextUtils.isEmpty(phoneRegisterPassword.getText().toString())) {
                             MyToast.makeText(PhoneRegisterActivity.this, getString(R.string.password_not_null), Toast.LENGTH_SHORT);
+                        } else if (phoneRegisterPassword.getText().toString().length()<6) {
+                            MyToast.makeText(PhoneRegisterActivity.this, "密码不能小于6位", Toast.LENGTH_SHORT);
                         } else if(phoneRegisterCore.length()<4){
                             MyToast.makeText(PhoneRegisterActivity.this, "验证码是4位哦", Toast.LENGTH_SHORT);
+                        }else  if (!chinaPhoneLegal) {
+                            MyToast.makeText(PhoneRegisterActivity.this, getString(R.string.phone_style_not_right), Toast.LENGTH_SHORT);
                         }else {
                             PreferencesUtils.addConfigInfo(PhoneRegisterActivity.this, "phone", phoneRegisterPhone.getText().toString().trim());
                             PreferencesUtils.addConfigInfo(PhoneRegisterActivity.this, "password", phoneRegisterPassword.getText().toString().trim());
@@ -266,7 +271,7 @@ public class PhoneRegisterActivity extends IActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.phone_register_back:
-                toActivity(RegisterActivity.class, null, 0);
+               // toActivity(RegisterActivity.class, null, 0);
                 finish();
                 break;
         }

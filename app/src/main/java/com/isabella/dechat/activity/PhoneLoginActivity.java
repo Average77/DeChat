@@ -156,7 +156,7 @@ public class PhoneLoginActivity extends IActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.phone_login_back:
-               toActivity(LoginActivity.class,null,0);
+             //  toActivity(LoginActivity.class,null,0);
                 finish();
                 break;
 

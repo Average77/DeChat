@@ -89,6 +89,7 @@ public class RegisterActivity extends IActivity{
     }
 
 
+
     @OnClick({R.id.login_back, R.id.register2login})
     public void onViewClicked(View view) {
         switch (view.getId()) {
