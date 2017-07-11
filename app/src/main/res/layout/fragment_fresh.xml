@@ -2,13 +2,78 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.isabella.dechat.fragment.MessageFragment">
+    android:background="@color/background"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+
+    <LinearLayout
+        android:id="@+id/friend_circle_fresh"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="hello_fresh_fragment" />
-
+        android:orientation="horizontal"
+        android:background="@color/bg_text_color"
+        android:layout_height="50dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_friend"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:textSize="20sp"
+            android:textColor="@color/toast_color"
+            android:text="@string/friend_circle"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/rish_scan_fresh"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/bg_text_color"
+        android:layout_height="50dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_zxing"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:textSize="20sp"
+            android:textColor="@color/toast_color"
+            android:text="@string/rich_scan"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/nearby_fresh"
+        android:layout_marginTop="1dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/bg_text_color"
+        android:layout_height="50dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_people"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:textSize="20sp"
+            android:textColor="@color/toast_color"
+            android:text="@string/nearby"
+            />
+    </LinearLayout>
 </LinearLayout>

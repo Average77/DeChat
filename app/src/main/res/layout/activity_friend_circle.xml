@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/tabber">
+
+        <ImageView
+            android:id="@+id/friend_circle_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:alpha="0.8"
+            android:src="@drawable/btn_back" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="朋友圈"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/bg_text_color"
+            android:textSize="20sp"
+            android:layout_toRightOf="@id/friend_circle_back"/>
+        <ImageView
+            android:id="@+id/friend_circle_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_margin="5dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_photo" />
+    </RelativeLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/friend_circle_background"
+                android:src="@mipmap/ic_friend_background_default"
+                android:scaleType="centerCrop"/>
+            <TextView
+                android:id="@+id/friend_circle_username_background"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UserName"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/bg_text_color"
+                android:layout_alignTop="@+id/friend_circle_head"
+                android:layout_toStartOf="@+id/friend_circle_head"
+                android:layout_marginEnd="12dp"
+                android:layout_marginTop="10dp" />
+            <TextView
+                android:id="@+id/friend_circle_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UserName"
+                android:textSize="20sp"
+                android:textColor="@color/gray"
+                android:layout_alignTop="@+id/friend_circle_head"
+                android:layout_toStartOf="@+id/friend_circle_head"
+                android:layout_marginEnd="12dp"
+                android:layout_marginTop="10dp" />
+            <ImageView
+
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/woman_user_round_icon_default"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="6dp"
+                android:layout_marginTop="154dp"
+                android:id="@+id/friend_circle_head" />
+        </RelativeLayout>
+    </ScrollView>
+</LinearLayout>

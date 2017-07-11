@@ -60,7 +60,7 @@ public class PhoneLoginActivity extends IActivity {
                     if(msg.arg2 == SMSSDK.RESULT_COMPLETE){//发送成功的情况
                         if(msg.arg1 == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE){//验证成功通过
                             toActivity(MainActivity.class,null,0);
-                            MyToast.makeText(PhoneLoginActivity.this, getString(R.string.register_success), Toast.LENGTH_SHORT);
+                           // MyToast.makeText(PhoneLoginActivity.this, getString(R.string.register_success), Toast.LENGTH_SHORT);
                         }
                     }else{
                         MyToast.makeText(PhoneLoginActivity.this, "验证码错误", Toast.LENGTH_SHORT);

@@ -20,6 +20,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isabella.dechat.R;
@@ -30,8 +31,10 @@ import com.isabella.dechat.bean.UploadPhotoBean;
 import com.isabella.dechat.contact.UploadContact;
 import com.isabella.dechat.presenter.UploadPresenter;
 import com.isabella.dechat.util.Constants;
+import com.isabella.dechat.util.DialogUtils;
 import com.isabella.dechat.util.GlideUtils;
 import com.isabella.dechat.util.ImageResizeUtils;
+import com.isabella.dechat.util.NetUtil;
 import com.isabella.dechat.util.PreferencesUtils;
 import com.isabella.dechat.util.SDCardUtils;
 import com.isabella.dechat.widget.MyToast;
@@ -78,17 +81,26 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
     Button uploadSure;
     @BindView(R.id.upload_over)
     ImageView uploadOver;
+    @BindView(R.id.upload_set_head)
+    TextView uploadSetHead;
     private UploadPresenter uploadPresenter = new UploadPresenter();
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            AppManager.getAppManager().finishOtherActivity();
-            AppManager.getAppManager().finishActivity(SplashActivity.class);
-            toActivity(MainActivity.class, null, 0);
+
+            if (from == 0) {
+                toActivity(MainActivity.class, null, 0);
+                PreferencesUtils.addConfigInfo(UploadActivity.this,"isSetPhoto",temp);
+                AppManager.getAppManager().finishOtherActivity();
+                AppManager.getAppManager().finishActivity(SplashActivity.class);
+            }
             finish();
         }
     };
+    private int from;
+    private AlertDialog.Builder builder;
+    private boolean temp = false;
 
     @Override
     public UploadPresenter initPresenter() {
@@ -100,6 +112,8 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
         ButterKnife.bind(this);
+        from = PreferencesUtils.getValueByKey(IApplication.getApplication(), "from", 0);
+
         String age = PreferencesUtils.getValueByKey(this, "gender", "");
         Log.d("UploadActivity", age);
         if ("男".equals(age)) {
@@ -107,13 +121,24 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
         } else {
             uploadHead.setImageResource(R.drawable.woman_user_round_icon_default);
         }
+        if (from == 1) {
+            uploadSetHead.setText("上传相册");
+            uploadHead.setImageResource(R.drawable.ic_album_default);
+        } else {
+            uploadSetHead.setText("设置头像");
+        }
+        builder = DialogUtils.setDialog(this);
         RxView.clicks(uploadCamera).throttleFirst(1, TimeUnit.MILLISECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(@NonNull Object o) throws Exception {
-
-                        toCheckPermissionCamera();
+                        if (NetUtil.isNetworkAvailable(UploadActivity.this)) {
+                            toCheckPermissionCamera();
+                            temp=true;
+                        } else {
+                            builder.show();
+                        }
 
                     }
                 });
@@ -122,8 +147,12 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(@NonNull Object o) throws Exception {
-
-                        toPhoto();
+                        if (NetUtil.isNetworkAvailable(UploadActivity.this)) {
+                            toPhoto();
+                            temp=true;
+                        } else {
+                            builder.show();
+                        }
 
                     }
                 });
@@ -151,7 +180,9 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.login_back:
-                toActivity(IntroActivity.class, null, 0);
+                if (from == 0) {
+                    toActivity(IntroActivity.class, null, 0);
+                }
                 finish();
                 break;
 
@@ -292,14 +323,17 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
                         }
                         Bitmap bitmap = ImageResizeUtils.resizeImage(f.getAbsolutePath(), Constants.RESIZE_PIC);
 
-
                         FileOutputStream fos = new FileOutputStream(f.getAbsolutePath());
                         if (bitmap != null) {
-                            PreferencesUtils.addConfigInfo(this, "picwidth", bitmap.getWidth()+"");
+                            PreferencesUtils.addConfigInfo(this, "picwidth", bitmap.getWidth() + "");
                             Log.d("UploadActivity", "bitmap.getWidth():" + bitmap.getWidth());
                             Log.d("UploadActivity", "bitmap.getHeight():" + bitmap.getHeight());
-                            PreferencesUtils.addConfigInfo(this, "picheight", bitmap.getHeight()+"");
-                            GlideUtils.getInstance().bitmapRound(bitmap, this, uploadHead);
+                            PreferencesUtils.addConfigInfo(this, "picheight", bitmap.getHeight() + "");
+                            if (from == 0) {
+                                GlideUtils.getInstance().bitmapRound(bitmap, this, uploadHead);
+                            } else {
+                                GlideUtils.getInstance().bitmapSet(bitmap, this, uploadHead);
+                            }
                             if (bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos)) {
                                 fos.close();
                                 fos.flush();
@@ -329,9 +363,13 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
                     Bitmap bitmap = ImageResizeUtils.resizeImage(file.getAbsolutePath(), Constants.RESIZE_PIC);
                     FileOutputStream fos = new FileOutputStream(file.getAbsolutePath());
                     if (bitmap != null) {
-                        PreferencesUtils.addConfigInfo(this, "picwidth", bitmap.getWidth());
-                        PreferencesUtils.addConfigInfo(this, "picheight", bitmap.getHeight());
-                        GlideUtils.getInstance().bitmapRound(bitmap, this, uploadHead);
+                        PreferencesUtils.addConfigInfo(this, "picwidth", bitmap.getWidth() + "");
+                        PreferencesUtils.addConfigInfo(this, "picheight", bitmap.getHeight() + "");
+                        if (from == 0) {
+                            GlideUtils.getInstance().bitmapRound(bitmap, this, uploadHead);
+                        } else {
+                            GlideUtils.getInstance().bitmapSet(bitmap, this, uploadHead);
+                        }
                         if (bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos)) {
                             fos.close();
                             fos.flush();
@@ -369,6 +407,9 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
     @Override
     public void success(UploadPhotoBean uploadPhotoBean) {
         MyToast.makeText(IApplication.getApplication(), "上传成功", Toast.LENGTH_SHORT);
+        if (from==0) {
+            PreferencesUtils.addConfigInfo(this, "imagepath", uploadPhotoBean.getHeadImagePath());
+        }
     }
 
     @Override

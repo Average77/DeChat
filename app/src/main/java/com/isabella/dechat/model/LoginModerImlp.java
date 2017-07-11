@@ -24,21 +24,27 @@ public class LoginModerImlp implements LoginContact.LoginModel {
 
     @Override
     public void getData(String phone, String password, final LoginContact.LoginModelImplResult loginModelImplResult) {
-        String randomKey =   RsaUtils.getStringRandom(16);
+        String randomKey = RsaUtils.getStringRandom(16);
 
 
-        String rsaRandomKey =   RsaUtils.getInstance().createRsaSecret(IApplication.getApplication(),randomKey);
+        String rsaRandomKey = RsaUtils.getInstance().createRsaSecret(IApplication.getApplication(), randomKey);
 
 
-        String cipherPhone =   JNCryptorUtils.getInstance().encryptData(phone,IApplication.getApplication(),randomKey);
+        String cipherPhone = JNCryptorUtils.getInstance().encryptData(phone, IApplication.getApplication(), randomKey);
 
+        String lat = PreferencesUtils.getValueByKey(IApplication.getApplication(), "lat", "");
+        String lng = PreferencesUtils.getValueByKey(IApplication.getApplication(), "lng", "");
 
         Map map = new HashMap<>();
-        map.put("user.phone",cipherPhone);
+        map.put("user.phone", cipherPhone);
         map.put("user.password", Md5Utils.getMD5(password));
-        map.put("user.secretkey",rsaRandomKey);
-        map.put("user.lat", PreferencesUtils.getValueByKey(IApplication.getApplication(),"lat","34.0"));
-        map.put("user.lng", PreferencesUtils.getValueByKey(IApplication.getApplication(),"lng","34.0"));
+        map.put("user.secretkey", rsaRandomKey);
+        if ("".equals(lat) || "".equals(lng)) {
+        } else {
+            map.put("user.lat", lat);
+            map.put("user.lng", lng);
+        }
+
         RetrofitManager.post(Constants.LOGIN_ACTION, map, new BaseObserver() {
             @Override
             public void onSuccess(String result) {

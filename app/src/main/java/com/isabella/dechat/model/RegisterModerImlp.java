@@ -29,10 +29,15 @@ public class RegisterModerImlp implements RegisterContact.RegisterModel {
         map.put("user.area",area);
         map.put("user.age",age+"");
         map.put("user.introduce",intro);
-        map.put("user.lat", PreferencesUtils.getValueByKey(IApplication.getApplication(),"lat","34.0"));
-        map.put("user.lng", PreferencesUtils.getValueByKey(IApplication.getApplication(),"lnt","34.0"));
-        Log.d("RegisterModerImlp", PreferencesUtils.getValueByKey(IApplication.getApplication(), "lat", "34.0"));
-        Log.d("RegisterModerImlp", PreferencesUtils.getValueByKey(IApplication.getApplication(), "lng", "34.0"));
+        String lat = PreferencesUtils.getValueByKey(IApplication.getApplication(), "lat", "");
+        String lng = PreferencesUtils.getValueByKey(IApplication.getApplication(), "lng", "");
+        if ("".equals(lat) || "".equals(lng)) {
+        } else {
+            map.put("user.lat", lat);
+            map.put("user.lng", lng);
+        }
+        Log.d("RegisterModerImlp", lat);
+        Log.d("RegisterModerImlp", lng);
       //  System.out.println("SortUtils.getMapResult(SortUtils.sortString(map)) = " + SortUtils.getMapResult(SortUtils.sortString(map)));
 
        // System.out.println("sign = " + sign);

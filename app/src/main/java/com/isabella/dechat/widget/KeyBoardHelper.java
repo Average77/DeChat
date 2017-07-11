@@ -14,7 +14,7 @@ public class KeyBoardHelper {
     private int screenHeight;
     // 空白高度 = 屏幕高度 - 当前 Activity 的可见区域的高度
     // 当 blankHeight 不为 0 即为软键盘高度。
-    private int blankHeight = 0;
+    public int blankHeight = 0;
 
     public KeyBoardHelper(Activity activity) {
         this.activity = activity;
@@ -24,6 +24,7 @@ public class KeyBoardHelper {
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
     }
+
 
     public void onCreate() {
         View content = activity.findViewById(android.R.id.content);

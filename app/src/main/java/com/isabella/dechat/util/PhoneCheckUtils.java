@@ -37,4 +37,9 @@ public class PhoneCheckUtils {
         Matcher m = p.matcher(str);
         return m.matches();
     }
+    public  static boolean isDight(String str) throws PatternSyntaxException {
+        Pattern p = Pattern.compile("^\\d{4}$");
+        Matcher m = p.matcher(str);
+        return m.matches();
+    }
 }

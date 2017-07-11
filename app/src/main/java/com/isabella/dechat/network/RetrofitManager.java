@@ -81,7 +81,12 @@ public class RetrofitManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
-
+    public static void uploadAlbum(MultipartBody multipartBody, Map<String,String> map, Observer<String> observer){
+        apiService.uploadAlbum(multipartBody,map)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
 
 
 

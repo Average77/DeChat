@@ -62,6 +62,15 @@ public class LoginBean {
         private String password;
         private double lat;
         private double lng;
+        private String imagePath;
+
+        public String getImagepath() {
+            return imagePath;
+        }
+
+        public void setImagepath(String imagepath) {
+            this.imagePath = imagepath;
+        }
 
         public double getLat() {
             return lat;
@@ -155,6 +164,7 @@ public class LoginBean {
                     ", password='" + password + '\'' +
                     ", lat=" + lat +
                     ", lng=" + lng +
+                    ", imagepath='" + imagePath + '\'' +
                     '}';
         }
     }

@@ -35,10 +35,10 @@ public class GlideUtils {
     private GlideUtils() {}
     public void haveCache(String url, ImageView view, Context context){
         Glide.with(context).load(url)
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.ic_album_default)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .error(R.mipmap.ic_launcher)
-                .fitCenter()
+                .error(R.drawable.ic_album_default)
+
                 .into(view);
 
     }
@@ -53,9 +53,9 @@ public class GlideUtils {
 
     public void haveCacheLarger(String url, ImageView view, Context context){
         Glide.with(context).load(url)
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.ic_album_default)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .error(R.mipmap.ic_launcher)
+                .error(R.drawable.ic_album_default)
                 .centerCrop()
                 .into(view);
 
@@ -65,7 +65,7 @@ public class GlideUtils {
         Glide.with(context).load(url)
                 .placeholder(R.drawable.woman_user_round_icon_default)
                 .error(R.drawable.woman_user_round_icon_default)
-                .transform(new CenterCrop(context),new GlideRound(context,80))
+                .transform(new CenterCrop(context),new GlideRound(context,50))
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(view);
     }
@@ -78,6 +78,16 @@ public class GlideUtils {
         Glide.with(context)
                 .load(bytes)
                 .transform(new CenterCrop(context),new GlideRound(context,80))
+                .into(imageView);
+    }
+    public void bitmapSet(Bitmap bitmap,Context context,ImageView imageView){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] bytes=baos.toByteArray();
+
+        Glide.with(context)
+                .load(bytes)
+                .centerCrop()
                 .into(imageView);
     }
 

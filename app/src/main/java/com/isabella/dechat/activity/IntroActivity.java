@@ -1,5 +1,6 @@
 package com.isabella.dechat.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import com.isabella.dechat.bean.RegisterBean;
 import com.isabella.dechat.cipher.Md5Utils;
 import com.isabella.dechat.contact.RegisterContact;
 import com.isabella.dechat.presenter.RegisterPresenter;
+import com.isabella.dechat.util.DialogUtils;
+import com.isabella.dechat.util.NetUtil;
 import com.isabella.dechat.util.PreferencesUtils;
 import com.isabella.dechat.widget.MyToast;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -58,6 +61,7 @@ public class IntroActivity extends BaseActivity<RegisterContact.RegisterView, Re
     @BindView(R.id.detail_bar)
     ProgressBar detailBar;
     RegisterPresenter registerPresenter = new RegisterPresenter();
+    private AlertDialog.Builder builder;
 
     @Override
     public RegisterPresenter initPresenter() {
@@ -70,27 +74,32 @@ public class IntroActivity extends BaseActivity<RegisterContact.RegisterView, Re
         setContentView(R.layout.activity_intro);
         ButterKnife.bind(this);
         setBackground();
+        builder = DialogUtils.setDialog(this);
         RxView.clicks(detailSure).throttleFirst(1, TimeUnit.MILLISECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(@NonNull Object o) throws Exception {
-                        if (TextUtils.isEmpty(detailNickname.getText().toString())) {
+                        if (NetUtil.isNetworkAvailable(IntroActivity.this)) {
+                            if (TextUtils.isEmpty(detailNickname.getText().toString())) {
 
-                            MyToast.makeText(IntroActivity.this, getString(R.string.nickname_not_null), Toast.LENGTH_SHORT);
-                        } else if (TextUtils.isEmpty(detailInfo.getText().toString())) {
-                            MyToast.makeText(IntroActivity.this, getString(R.string.intro_not_null), Toast.LENGTH_SHORT);
-                        } else if (getString(R.string.select_area).equals(detailSelectArea.getText().toString())) {
-                            MyToast.makeText(IntroActivity.this, getString(R.string.area_not_null), Toast.LENGTH_SHORT);
+                                MyToast.makeText(IntroActivity.this, getString(R.string.nickname_not_null), Toast.LENGTH_SHORT);
+                            } else if (TextUtils.isEmpty(detailInfo.getText().toString())) {
+                                MyToast.makeText(IntroActivity.this, getString(R.string.intro_not_null), Toast.LENGTH_SHORT);
+                            } else if (getString(R.string.select_area).equals(detailSelectArea.getText().toString())) {
+                                MyToast.makeText(IntroActivity.this, getString(R.string.area_not_null), Toast.LENGTH_SHORT);
+                            } else {
+                                detailBar.setVisibility(View.VISIBLE);
+                                registerPresenter.getData(PreferencesUtils.getValueByKey(IntroActivity.this, "phone", ""), Md5Utils.getMD5(PreferencesUtils.getValueByKey(IntroActivity.this, "password", "")),
+                                        PreferencesUtils.getValueByKey(IntroActivity.this, "gender", ""), detailSelectArea.getText().toString().trim(), PreferencesUtils.getValueByKey(IntroActivity.this, "age", ""),
+                                        detailNickname.getText().toString().trim(), detailInfo.getText().toString().trim());
+
+
+                            }
                         } else {
-                            detailBar.setVisibility(View.VISIBLE);
-                            registerPresenter.getData(PreferencesUtils.getValueByKey(IntroActivity.this,"phone",""), Md5Utils.getMD5(PreferencesUtils.getValueByKey(IntroActivity.this,"password","")),
-                                    PreferencesUtils.getValueByKey(IntroActivity.this,"gender",""), detailSelectArea.getText().toString().trim(), PreferencesUtils.getValueByKey(IntroActivity.this,"age",""),
-                                    detailNickname.getText().toString().trim(), detailInfo.getText().toString().trim());
-
-
+                            builder.show();
                         }
-                       // System.out.println("o = " + o);
+                        // System.out.println("o = " + o);
 
                     }
                 });
@@ -100,7 +109,7 @@ public class IntroActivity extends BaseActivity<RegisterContact.RegisterView, Re
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.detail_back:
-                toActivity(PhoneRegisterActivity.class,null,0);
+                toActivity(PhoneRegisterActivity.class, null, 0);
                 finish();
                 break;
             case R.id.detail_select_area:
@@ -172,13 +181,13 @@ public class IntroActivity extends BaseActivity<RegisterContact.RegisterView, Re
                 .title("地址选择")
                 .titleBackgroundColor("#FFFFFF")
                 // .titleTextColor("#696969")
-                .confirTextColor("#696969")
+                .confirTextColor("#79C3C7")
                 .cancelTextColor("#696969")
-                .province("江苏省")
-                .city("常州市")
-                .district("天宁区")
+                .province("北京市")
+                .city("北京市")
+                .district("海淀区")
                 .textColor(Color.parseColor("#000000"))
-                .provinceCyclic(true)
+                .provinceCyclic(false)
                 .cityCyclic(false)
                 .districtCyclic(false)
                 .visibleItemsCount(7)
@@ -203,13 +212,15 @@ public class IntroActivity extends BaseActivity<RegisterContact.RegisterView, Re
                 detailSure.setBackgroundResource(R.drawable.sl_bg_login);
             }
         });
-    }
 
+    }
     @Override
     public void success(RegisterBean registerBean) {
         if (registerBean.getResult_code()==200) {
             detailBar.setVisibility(View.GONE);
-            toActivity(UploadActivity.class, null, 0);
+            PreferencesUtils.addConfigInfo(this,"from",0);
+            toActivity(UploadActivity.class,null,0);
+            PreferencesUtils.addConfigInfo(this, "nickname", registerBean.getData().getNickname());
         }else{
             MyToast.makeText(this,registerBean.getResult_message(),Toast.LENGTH_SHORT);
         }

@@ -7,7 +7,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.isabella.dechat.R;
 import com.isabella.dechat.fragment.FreshFragment;
@@ -20,12 +22,17 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
     @BindView(R.id.container_fram_main)
     FrameLayout containerFramMain;
     @BindView(R.id.tabber_rg_main)
     RadioGroup tabberRgMain;
+    @BindView(R.id.dechat)
+    TextView dechat;
+    @BindView(R.id.plus)
+    ImageView plus;
     private FragmentManager fragmentManager;
     private List<Fragment> fragments = new ArrayList<>();
 
@@ -38,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
         createFragment(savedInstanceState);
         switchFragment(0);
-
+        dechat.setText("消息");
         tabberRgMain.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -46,23 +53,23 @@ public class MainActivity extends AppCompatActivity {
                 switch (checkedId) {
 
                     case R.id.tabber_rb_message:
-
+                       dechat.setText("消息");
                         switchFragment(0);
                         break;
 
                     case R.id.tabber_rb_friend:
                         switchFragment(1);
-
+                        dechat.setText("好友");
                         break;
 
                     case R.id.tabber_rb_fresh:
                         switchFragment(2);
-
+                        dechat.setText("新鲜事");
                         break;
 
                     case R.id.tabber_rb_me:
                         switchFragment(3);
-
+                        dechat.setText("我的");
                         break;
 
                 }
@@ -126,4 +133,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @OnClick(R.id.plus)
+    public void onViewClicked() {
+
+    }
 }

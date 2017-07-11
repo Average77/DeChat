@@ -1,5 +1,6 @@
 package com.isabella.dechat.activity;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -13,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,8 @@ import com.isabella.dechat.bean.LoginBean;
 import com.isabella.dechat.contact.LoginContact;
 import com.isabella.dechat.core.JNICore;
 import com.isabella.dechat.presenter.LoginPresenter;
+import com.isabella.dechat.util.DialogUtils;
+import com.isabella.dechat.util.NetUtil;
 import com.isabella.dechat.util.PreferencesUtils;
 import com.isabella.dechat.widget.MyToast;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -36,7 +40,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 
-public class LoginActivity extends BaseActivity<LoginContact.LoginView,LoginPresenter> implements LoginContact.LoginView{
+public class LoginActivity extends BaseActivity<LoginContact.LoginView, LoginPresenter> implements LoginContact.LoginView {
 
     @BindView(R.id.login_back)
     ImageView loginBack;
@@ -52,8 +56,11 @@ public class LoginActivity extends BaseActivity<LoginContact.LoginView,LoginPres
     Button loginLogin;
     @BindView(R.id.login2phone_login)
     TextView login2phoneLogin;
+    @BindView(R.id.login_bar)
+    ProgressBar loginBar;
 
     private LoginPresenter loginPresenter = new LoginPresenter();
+    private AlertDialog.Builder builder;
 
     @Override
     public LoginPresenter initPresenter() {
@@ -67,6 +74,11 @@ public class LoginActivity extends BaseActivity<LoginContact.LoginView,LoginPres
         ButterKnife.bind(this);
         loginPhone.setText(PreferencesUtils.getValueByKey(this, "phone", ""));
         loginPassword.setText(PreferencesUtils.getValueByKey(this, "password", ""));
+        if (TextUtils.isEmpty(loginPassword.getText()) && TextUtils.isEmpty(loginPhone.getText())) {
+
+        } else {
+            loginLogin.setBackgroundResource(R.drawable.sl_bg_login);
+        }
         loginCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -83,24 +95,29 @@ public class LoginActivity extends BaseActivity<LoginContact.LoginView,LoginPres
             }
         });
         setBackground();
+        builder = DialogUtils.setDialog(this);
         RxView.clicks(loginLogin).throttleFirst(1, TimeUnit.MILLISECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(@NonNull Object o) throws Exception {
+                        if (NetUtil.isNetworkAvailable(LoginActivity.this)) {
                         if (TextUtils.isEmpty(loginPhone.getText().toString())) {
                             MyToast.makeText(LoginActivity.this, getString(R.string.phone_email_not_null), Toast.LENGTH_SHORT);
                         } else if (TextUtils.isEmpty(loginPassword.getText().toString())) {
                             MyToast.makeText(LoginActivity.this, getString(R.string.password_not_null), Toast.LENGTH_SHORT);
                         } else {
-                           presenter.getData(loginPhone.getText().toString(),loginPassword.getText().toString());
+                            loginBar.setVisibility(View.VISIBLE);
+                            presenter.getData(loginPhone.getText().toString(), loginPassword.getText().toString());
 
 
                         }
                         String sign = JNICore.getSign("123456");
                         System.out.println("sign = " + sign);
 
-
+                        }else{
+                            builder.show();
+                        }
                     }
                 });
     }
@@ -171,19 +188,24 @@ public class LoginActivity extends BaseActivity<LoginContact.LoginView,LoginPres
 
     @Override
     public void success(LoginBean loginBean) {
-        if (loginBean.getResult_code()==200) {
+        if (loginBean.getResult_code() == 200) {
+
             AppManager.getAppManager().finishActivity(SplashActivity.class);
+            PreferencesUtils.addConfigInfo(this, "nickname", loginBean.getData().getNickname());
+            PreferencesUtils.addConfigInfo(this, "imagepath", loginBean.getData().getImagepath());
             toActivity(MainActivity.class, null, 0);
             finish();
-        }else{
-            MyToast.makeText(this,loginBean.getResult_message(),Toast.LENGTH_SHORT);
+        } else {
+            MyToast.makeText(this, loginBean.getResult_message(), Toast.LENGTH_SHORT);
         }
+        loginBar.setVisibility(View.GONE);
     }
 
     @Override
     public void failed(Throwable e) {
         Log.d("LoginActivity", "e:" + e);
-        MyToast.makeText(this,"登陆失败",Toast.LENGTH_SHORT);
+        MyToast.makeText(this, "登陆失败", Toast.LENGTH_SHORT);
+        loginBar.setVisibility(View.GONE);
 
     }
 }

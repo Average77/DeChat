@@ -15,6 +15,8 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.LOCATION_HARDWARE"/>
     <uses-permission android:name= "android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
 
     <application
@@ -50,8 +52,9 @@
         <activity android:name=".activity.PhoneLoginActivity" />
         <activity android:name=".activity.PhoneRegisterActivity" android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".activity.MainActivity" android:launchMode="singleTask"/>
-        <activity android:name=".activity.IntroActivity"/>
+        <activity android:name=".activity.IntroActivity" android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".activity.UploadActivity"/>
+        <activity android:name=".activity.FriendCircleActivity"/>
     </application>
 
 </manifest>

@@ -1,5 +1,7 @@
 package com.isabella.dechat.model;
 
+import android.util.Log;
+
 import com.isabella.dechat.base.IApplication;
 import com.isabella.dechat.bean.UploadPhotoBean;
 import com.isabella.dechat.contact.UploadContact;
@@ -28,10 +30,11 @@ public class UploadModerImlp implements UploadContact.UploadModel {
 
     @Override
     public void getData(File file, final UploadContact.UploadModelImplResult uploadModelImplResult) {
+        int from = PreferencesUtils.getValueByKey(IApplication.getApplication(), "from", 0);
 
         String[] arr = file.getAbsolutePath().split("/");
 
-        RequestBody requestFile =
+        final RequestBody requestFile =
                 RequestBody.create(MediaType.parse("multipart/form-data"), file);
 
         long ctimer = System.currentTimeMillis();
@@ -53,7 +56,7 @@ public class UploadModerImlp implements UploadContact.UploadModel {
 //         file 00101010110
 //        key = value
 
-
+    if (from==0) {
         RetrofitManager.uploadPhoto(body, map, new BaseObserver() {
             @Override
             public void onSuccess(String result) {
@@ -71,6 +74,25 @@ public class UploadModerImlp implements UploadContact.UploadModel {
 
             }
         });
+    }else{
+        RetrofitManager.uploadAlbum(body, map, new BaseObserver() {
+            @Override
+            public void onSuccess(String result) {
+                Log.d("UploadModerImlp", result);
+                UploadPhotoBean uploadPhotoBean = GsonUtil.getInstance().fromJson(result, UploadPhotoBean.class);
+                if (uploadPhotoBean.getResult_code() == 200) {
+                    uploadModelImplResult.success(uploadPhotoBean);
+                }
+
+            }
+
+            @Override
+            public void onFailed(Throwable e) {
+                uploadModelImplResult.failed(e);
+
+            }
+        });
+    }
 
     }
 }
