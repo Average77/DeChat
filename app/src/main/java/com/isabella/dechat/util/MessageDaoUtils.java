@@ -39,23 +39,5 @@ public class MessageDaoUtils {
                     }
                 });
     }
-    public static void query(){
-        Observable.create(new ObservableOnSubscribe<Long>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<Long> e) throws Exception {
 
-
-                IApplication.getApplication().daoSession.getNearbyDataBeanDao().loadAll();
-
-
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(@NonNull Long aLong) throws Exception {
-
-                    }
-                });
-    }
 }

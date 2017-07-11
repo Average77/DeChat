@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="120dp">
+
+    <ImageView
+        android:id="@+id/recy_msg_iv"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="10dp" />
+
+    <TextView
+        android:id="@+id/recy_msg_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/recy_msg_iv"
+        android:textColor="@color/toast_color"
+        android:textSize="20sp"
+        tools:text="111" />
+
+    <TextView
+        android:id="@+id/recy_msg_sex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="25dp"
+        android:layout_toRightOf="@id/recy_msg_iv"
+        android:textColor="@color/toast_color"
+        android:textSize="15sp"
+        tools:text="111" />
+
+    <TextView
+        android:id="@+id/recy_msg_intro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/recy_msg_iv"
+        android:textColor="@color/toast_color"
+        android:textSize="15sp"
+        tools:text="111" />
+
+    <TextView
+        android:id="@+id/recy_msg_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:visibility="invisible"
+        tools:text="相距6公里" />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:visibility="invisible"
+        android:layout_centerVertical="true"
+        android:id="@+id/recy_msg_distance_iv"
+        android:layout_toLeftOf="@+id/recy_msg_distance"
+        android:src="@drawable/ic_distance" />
+</RelativeLayout>
