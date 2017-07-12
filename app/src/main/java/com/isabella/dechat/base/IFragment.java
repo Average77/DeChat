@@ -24,5 +24,17 @@ public class IFragment extends Fragment {
             startActivityForResult(intent,requestCode);
         }
     }
+    public void toActivity(Class clazz , int userId,String nickname){
+        Intent intent = new Intent(getActivity(), clazz);
+        if (userId !=0) {
+            intent.putExtra("userId",userId);
+            intent.putExtra("nickname",nickname);
+        }
+       // if(requestCode == 0){
+            startActivity(intent);
+      //  }else {
+       //     startActivityForResult(intent,requestCode);
+       // }
+    }
 
 }

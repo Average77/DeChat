@@ -20,14 +20,14 @@ public class RecyclerPresenter extends BasePresenter<RecyclerContact.RecyView> {
         registerModerImlp = new RecyclerModerImlp();
     }
 
-    public void getData( long currentTime) {
+    public void getData( long currentTime,int page) {
 
-        registerModerImlp.getData(currentTime, new RecyclerContact.RecyclerModelImplResult() {
+        registerModerImlp.getData(currentTime,page, new RecyclerContact.RecyclerModelImplResult() {
 
 
             @Override
-            public void success( List<NearbyDataBean> data ) {
-                view.success(data);
+            public void success( List<NearbyDataBean> data ,boolean isData) {
+                view.success(data,isData);
             }
 
             @Override

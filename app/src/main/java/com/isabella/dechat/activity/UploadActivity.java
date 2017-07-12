@@ -88,19 +88,27 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            if (msg.what == 0) {
+                if (from == 0) {
+                    toActivity(MainActivity.class, null, 0);
+                    PreferencesUtils.addConfigInfo(UploadActivity.this, "isSetPhoto", temp);
+                    AppManager.getAppManager().finishOtherActivity();
+                    AppManager.getAppManager().finishActivity(SplashActivity.class);
+                }
+                if (success) {
+                    finish();
+                }else{
+                    MyToast.makeText(UploadActivity.this, "网络过慢,请您重新上传", Toast.LENGTH_SHORT);
+                }
 
-            if (from == 0) {
-                toActivity(MainActivity.class, null, 0);
-                PreferencesUtils.addConfigInfo(UploadActivity.this,"isSetPhoto",temp);
-                AppManager.getAppManager().finishOtherActivity();
-                AppManager.getAppManager().finishActivity(SplashActivity.class);
             }
-            finish();
         }
+
     };
     private int from;
     private AlertDialog.Builder builder;
     private boolean temp = false;
+    private boolean success = false;
 
     @Override
     public UploadPresenter initPresenter() {
@@ -135,7 +143,7 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
                     public void accept(@NonNull Object o) throws Exception {
                         if (NetUtil.isNetworkAvailable(UploadActivity.this)) {
                             toCheckPermissionCamera();
-                            temp=true;
+                            temp = true;
                         } else {
                             builder.show();
                         }
@@ -149,7 +157,7 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
                     public void accept(@NonNull Object o) throws Exception {
                         if (NetUtil.isNetworkAvailable(UploadActivity.this)) {
                             toPhoto();
-                            temp=true;
+                            temp = true;
                         } else {
                             builder.show();
                         }
@@ -238,14 +246,14 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
 
     @OnPermissionDenied({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA})
     public void onDenied() {
-        Toast.makeText(this, "权限被拒绝", Toast.LENGTH_SHORT).show();
+        MyToast.makeText(this, "权限被拒绝", Toast.LENGTH_SHORT);
 
     }
 
 
     @OnNeverAskAgain({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA})
     public void onNeverAsyAgain() {
-        Toast.makeText(this, "不再提示", Toast.LENGTH_SHORT).show();
+        MyToast.makeText(this, "不再提示", Toast.LENGTH_SHORT);
     }
 
 
@@ -406,8 +414,10 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
 
     @Override
     public void success(UploadPhotoBean uploadPhotoBean) {
+        success = true;
+       // handler.sendEmptyMessage(1);
         MyToast.makeText(IApplication.getApplication(), "上传成功", Toast.LENGTH_SHORT);
-        if (from==0) {
+        if (from == 0) {
             PreferencesUtils.addConfigInfo(this, "imagepath", uploadPhotoBean.getHeadImagePath());
         }
     }

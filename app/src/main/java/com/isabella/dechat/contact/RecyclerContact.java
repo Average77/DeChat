@@ -11,14 +11,14 @@ import java.util.List;
 
 public class RecyclerContact {
     public interface RecyclerModel{
-        void getData(long currentTime, RecyclerModelImplResult recyclerModelImplResult);
+        void getData(long currentTime,int page, RecyclerModelImplResult recyclerModelImplResult);
     }
     public  interface RecyclerModelImplResult{
-        void success(List<NearbyDataBean> data);
+        void success(List<NearbyDataBean> data,boolean isData);
         void failed(Throwable e);
     }
     public  interface RecyView{
-        void success(List<NearbyDataBean> data);
+        void success(List<NearbyDataBean> data,boolean isData);
         void failed(Throwable e);
     }
 }

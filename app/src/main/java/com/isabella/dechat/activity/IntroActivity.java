@@ -221,6 +221,7 @@ public class IntroActivity extends BaseActivity<RegisterContact.RegisterView, Re
             PreferencesUtils.addConfigInfo(this,"from",0);
             toActivity(UploadActivity.class,null,0);
             PreferencesUtils.addConfigInfo(this, "nickname", registerBean.getData().getNickname());
+            PreferencesUtils.addConfigInfo(this, "userId", registerBean.getData().getUserId());
         }else{
             MyToast.makeText(this,registerBean.getResult_message(),Toast.LENGTH_SHORT);
         }

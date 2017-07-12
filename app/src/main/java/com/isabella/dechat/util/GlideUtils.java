@@ -43,9 +43,9 @@ public class GlideUtils {
     }
     public void photo(String url, ImageView view, Context context){
         Glide.with(context).load(url)
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.mipmap.ic_friend_background_default)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .error(R.mipmap.ic_launcher)
+                .error(R.mipmap.ic_friend_background_default)
                 .into(view);
 
     }
@@ -58,6 +58,15 @@ public class GlideUtils {
                 .centerCrop()
                 .into(view);
 
+    }
+    //小圆角
+    public void havaRoundLetter(String url, ImageView view, Context context){
+        Glide.with(context).load(url)
+                .placeholder(R.drawable.woman_user_round_icon_default)
+                .error(R.drawable.woman_user_round_icon_default)
+                .transform(new CenterCrop(context),new GlideRound(context,10))
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .into(view);
     }
     //把网络请求图片设置成圆角
     public void havaRound(String url, ImageView view, Context context){

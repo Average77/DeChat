@@ -12,12 +12,11 @@
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.LOCATION_HARDWARE"/>
-    <uses-permission android:name= "android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.LOCATION_HARDWARE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".base.IApplication"
@@ -27,7 +26,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/CTheme">
-        <activity android:name=".activity.SplashActivity" android:theme="@style/splash_style">
+        <activity
+            android:name=".activity.SplashActivity"
+            android:theme="@style/splash_style">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,8 +40,12 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".activity.RegisterActivity" android:launchMode="singleTask"/>
-        <activity android:name=".activity.LoginActivity" android:launchMode="singleTask"/>
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:launchMode="singleTask" />
 
         <meta-data
             android:name="Mob-AppKey"
@@ -50,11 +55,18 @@
             android:value="2aa7f7ec186a268bb7396edd3fd070df" />
 
         <activity android:name=".activity.PhoneLoginActivity" />
-        <activity android:name=".activity.PhoneRegisterActivity" android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".activity.MainActivity" android:launchMode="singleTask"/>
-        <activity android:name=".activity.IntroActivity" android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".activity.UploadActivity"/>
-        <activity android:name=".activity.FriendCircleActivity"/>
+        <activity
+            android:name=".activity.PhoneRegisterActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.IntroActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".activity.UploadActivity" />
+        <activity android:name=".activity.FriendCircleActivity" />
+        <activity android:name=".activity.UserInfoActivity"></activity>
     </application>
 
 </manifest>

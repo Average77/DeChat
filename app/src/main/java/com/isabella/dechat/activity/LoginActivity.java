@@ -102,22 +102,22 @@ public class LoginActivity extends BaseActivity<LoginContact.LoginView, LoginPre
                     @Override
                     public void accept(@NonNull Object o) throws Exception {
                         if (NetUtil.isNetworkAvailable(LoginActivity.this)) {
-                        if (TextUtils.isEmpty(loginPhone.getText().toString())) {
-                            MyToast.makeText(LoginActivity.this, getString(R.string.phone_email_not_null), Toast.LENGTH_SHORT);
-                        } else if (TextUtils.isEmpty(loginPassword.getText().toString())) {
-                            MyToast.makeText(LoginActivity.this, getString(R.string.password_not_null), Toast.LENGTH_SHORT);
-                        }  else if (loginPassword.getText().toString().length()<6) {
-                            MyToast.makeText(LoginActivity.this, "密码不能小于6位", Toast.LENGTH_SHORT);
-                        }else {
-                            loginBar.setVisibility(View.VISIBLE);
-                            presenter.getData(loginPhone.getText().toString(), loginPassword.getText().toString());
+                            if (TextUtils.isEmpty(loginPhone.getText().toString())) {
+                                MyToast.makeText(LoginActivity.this, getString(R.string.phone_email_not_null), Toast.LENGTH_SHORT);
+                            } else if (TextUtils.isEmpty(loginPassword.getText().toString())) {
+                                MyToast.makeText(LoginActivity.this, getString(R.string.password_not_null), Toast.LENGTH_SHORT);
+                            } else if (loginPassword.getText().toString().length() < 6) {
+                                MyToast.makeText(LoginActivity.this, "密码不能小于6位", Toast.LENGTH_SHORT);
+                            } else {
+                                loginBar.setVisibility(View.VISIBLE);
+                                presenter.getData(loginPhone.getText().toString(), loginPassword.getText().toString());
 
 
-                        }
-                        String sign = JNICore.getSign("123456");
-                        System.out.println("sign = " + sign);
+                            }
+                            String sign = JNICore.getSign("123456");
+                            System.out.println("sign = " + sign);
 
-                        }else{
+                        } else {
                             builder.show();
                         }
                     }
@@ -183,7 +183,9 @@ public class LoginActivity extends BaseActivity<LoginContact.LoginView, LoginPre
 
             case R.id.login2phone_login:
                 toActivity(PhoneLoginActivity.class, null, 0);
-                MyToast.makeText(this, "此功能不能真正登录", Toast.LENGTH_SHORT);
+//                Snackbar.make(container, "此功能不能真正登录", Snackbar.LENGTH_SHORT)
+//                        .show();
+                  MyToast.makeText(this,"此功能不能真正登录" , Toast.LENGTH_SHORT);
                 break;
         }
     }
@@ -195,6 +197,8 @@ public class LoginActivity extends BaseActivity<LoginContact.LoginView, LoginPre
             AppManager.getAppManager().finishActivity(SplashActivity.class);
             PreferencesUtils.addConfigInfo(this, "nickname", loginBean.getData().getNickname());
             PreferencesUtils.addConfigInfo(this, "imagepath", loginBean.getData().getImagepath());
+            PreferencesUtils.addConfigInfo(this, "userId", loginBean.getData().getUserId());
+            Log.d("LoginActivity", "loginBean.getData().getUserId():" + loginBean.getData().getUserId());
             toActivity(MainActivity.class, null, 0);
             finish();
         } else {

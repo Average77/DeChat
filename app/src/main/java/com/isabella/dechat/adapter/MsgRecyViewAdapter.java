@@ -20,7 +20,6 @@ import com.isabella.dechat.util.Distance;
 import com.isabella.dechat.util.GlideUtils;
 import com.isabella.dechat.util.PreferencesUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,36 +33,56 @@ public class MsgRecyViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private int itemWidth;
     java.text.DecimalFormat df = new java.text.DecimalFormat("0.0");
     private String format;
-
-    public MsgRecyViewAdapter(Context context) {
+    private OnItemClickListener mOnItemClickListener;
+    private OnItemLongClickListener mOnItemLongClickListener;
+    public MsgRecyViewAdapter(Context context,List<NearbyDataBean> mValues) {
         this.context = context;
-        //当前屏幕 的宽度 除以3
+        this.mValues=mValues;
+        //当前屏幕 的宽度 除以2
         itemWidth = DeviceUtils.getDisplayInfomation(context).x / 2;
     }
 
-
-    public void setData(List<NearbyDataBean> data, int page) {
-        if (mValues == null) {
-            mValues = new ArrayList<>();
-        }
-        if (page == 1) {
-            mValues.clear();
-        }
-        if (data != null || data.size() != 0) {
-            mValues.addAll(data);
-        }
-        notifyDataSetChanged();
+    public interface OnItemClickListener{
+        void onItemClick(View view,int position);
     }
+
+    public interface OnItemLongClickListener{
+        void onItemLongClick(View view,int position);
+    }
+    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener){
+        this.mOnItemClickListener = mOnItemClickListener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener mOnItemLongClickListener) {
+        this.mOnItemLongClickListener = mOnItemLongClickListener;
+    }
+//    public void setData(List<NearbyDataBean> data, int page) {
+//        if (mValues == null) {
+//            mValues = new ArrayList<>();
+//        }
+//        if (page == 1) {
+//            mValues.clear();
+//        }
+//        if (data != null || data.size() != 0) {
+//            mValues.addAll(data);
+//        }
+//        notifyDataSetChanged();
+//    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         if (viewType == 1) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_recycler_message_stag, parent, false);
+            //将创建的View注册点击事件
+
             return new StaggerViewHolder(view);
         } else {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_recycler_message_list, parent, false);
+            //将创建的View注册点击事件
+
             return new ViewHolder(view);
         }
     }
@@ -83,7 +102,7 @@ public class MsgRecyViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
         String lat = PreferencesUtils.getValueByKey(IApplication.getApplication(), "lat", "34");
         String lng = PreferencesUtils.getValueByKey(IApplication.getApplication(), "lng", "34");
@@ -100,30 +119,35 @@ public class MsgRecyViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (holder instanceof ViewHolder) {
 
             //列表的形式展示
-            ViewHolder viewHolder = (ViewHolder) holder;
+            final ViewHolder viewHolder = (ViewHolder) holder;
 
             viewHolder.nickname.setText(mValues.get(position).getNickname());
 
 
             viewHolder.intro.setText(mValues.get(position).getIntroduce());
             GlideUtils.getInstance().haveCacheLarger(mValues.get(position).getImagePath(), viewHolder.iv, context);
-            // Glide.with(context).load(mValues.get(position).getImagePath()).error(R.drawable.ic_album_default).into(viewHolder.iv);
-
-
-//            double olat = mValues.get(position).getLat();
-//            double olng = list.get(position).getLng() ;
-//
-//
-//            if(!TextUtils.isEmpty(lat) && !TextUtils.isEmpty(lng) && olat != 0.0 && olng != 0.0){
-//
-//                double dlat = Double.valueOf(lat);
-//                double dlng = Double.valueOf(lng);
-//                DPoint dPoint = new DPoint(dlat,dlng);
-//                DPoint oPoint = new DPoint(olat,olng);
-//
-//                //计算两点之间的距离
-//                float dis =  CoordinateConverter.calculateLineDistance(dPoint,oPoint);
-
+            //判断是否设置了监听器
+            if(mOnItemClickListener != null){
+                //为ItemView设置监听器
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = viewHolder.getLayoutPosition(); // 1
+                        mOnItemClickListener.onItemClick(viewHolder.itemView,position); // 2
+                    }
+                });
+            }
+            if(mOnItemLongClickListener != null){
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        int position = viewHolder.getLayoutPosition();
+                        mOnItemLongClickListener.onItemLongClick(viewHolder.itemView,position);
+                        //返回true 表示消耗了事件 事件不会继续传递
+                        return true;
+                    }
+                });
+            }
             viewHolder.sex.setText(mValues.get(position).getAge() + "岁 , " + mValues.get(position).getGender());
             if ("0".equals(format)) {
                 viewHolder.distance.setVisibility(View.INVISIBLE);
@@ -137,7 +161,7 @@ public class MsgRecyViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
         } else {
-            StaggerViewHolder staggeredViewHolder = (StaggerViewHolder) holder;
+            final StaggerViewHolder staggeredViewHolder = (StaggerViewHolder) holder;
             if ("0".equals(format)) {
                 staggeredViewHolder.mContentView.setText("距离未知");
             } else {
@@ -164,7 +188,27 @@ public class MsgRecyViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             GlideUtils.getInstance().haveCache(mValues.get(position).getImagePath(), staggeredViewHolder.iv, context);
             // Glide.with(context).load(mValues.get(position).getImagePath()).error(R.drawable.ic_album_default).into(staggeredViewHolder.iv);
-
+            if(mOnItemClickListener != null){
+                //为ItemView设置监听器
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = staggeredViewHolder.getLayoutPosition(); // 1
+                        mOnItemClickListener.onItemClick(staggeredViewHolder.itemView,position); // 2
+                    }
+                });
+            }
+            if(mOnItemLongClickListener != null){
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        int position = staggeredViewHolder.getLayoutPosition();
+                        mOnItemLongClickListener.onItemLongClick(staggeredViewHolder.itemView,position);
+                        //返回true 表示消耗了事件 事件不会继续传递
+                        return true;
+                    }
+                });
+            }
         }
     }
 
