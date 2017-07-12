@@ -42,11 +42,12 @@ public class UserInfoRecyAdapter extends RecyclerView.Adapter<UserInfoRecyAdapte
     @Override
     public void onBindViewHolder(UserInfoRecyAdapter.CViewHolder holder, int position) {
        GlideUtils.getInstance().havaRoundLetter(list.get(position).getImagePath(),holder.iv,context);
+
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return list!=null?list.size():0;
     }
 
     public interface MyItemClickListener {

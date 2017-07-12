@@ -75,23 +75,25 @@
 
         <TextView
             android:id="@+id/detail_area"
-            android:layout_width="0dp"
+            android:layout_width="50dp"
             android:layout_marginLeft="5dp"
             android:layout_height="wrap_content"
             android:text="@string/area"
             android:textSize="20sp"
-            android:layout_weight="1"
             android:textColor="@color/hint_text_color" />
 
         <TextView
+
             android:id="@+id/detail_select_area"
             android:layout_width="wrap_content"
             android:layout_marginRight="5dp"
+            android:gravity="right"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="@string/select_area"
             android:maxLength="15"
             android:maxLines="1"
-            android:textSize="20sp"
+            android:textSize="18sp"
 
             />
 
