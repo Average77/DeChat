@@ -22,6 +22,7 @@ import com.isabella.dechat.contact.UserInfoContact;
 import com.isabella.dechat.presenter.UserInfoPresenter;
 import com.isabella.dechat.util.DeviceUtils;
 import com.isabella.dechat.util.GlideUtils;
+import com.isabella.dechat.util.PicShowDialog;
 import com.isabella.dechat.widget.MyToast;
 
 import java.text.SimpleDateFormat;
@@ -121,7 +122,7 @@ public class UserInfoActivity extends BaseActivity<UserInfoContact.UserInfoView,
         userInfoAddress.setText(address);
         userInfoIntro.setText(intro);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String format = simpleDateFormat.format(lasttime);
         userInfoLasttime.setText(format);
 //        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) userInfoHead.getLayoutParams();
@@ -139,7 +140,8 @@ public class UserInfoActivity extends BaseActivity<UserInfoContact.UserInfoView,
         userInfoRecyAdapter.setOnItemClickListener(new UserInfoRecyAdapter.MyItemClickListener() {
             @Override
             public void onItemClick(View view, int postion) {
-
+                PicShowDialog dialog=new PicShowDialog(UserInfoActivity.this,photolist,postion);
+                dialog.show();
             }
         });
         //设置布局管理器

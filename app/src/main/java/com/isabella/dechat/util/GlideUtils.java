@@ -62,8 +62,8 @@ public class GlideUtils {
     //小圆角
     public void havaRoundLetter(String url, ImageView view, Context context){
         Glide.with(context).load(url)
-                .placeholder(R.drawable.woman_user_round_icon_default)
-                .error(R.drawable.woman_user_round_icon_default)
+                .placeholder(R.drawable.ic_album_default)
+                .error(R.drawable.ic_album_default)
                 .transform(new CenterCrop(context),new GlideRound(context,10))
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(view);
