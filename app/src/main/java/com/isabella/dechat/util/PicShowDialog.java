@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -252,7 +251,7 @@ public class PicShowDialog extends Dialog {
                             @Override
                             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                                 //image.setImageBitmap(resource);
-                                MyToast.makeText(context, "保存成功", Toast.LENGTH_SHORT);
+                                MyToast.getInstance().makeText( "保存成功");
                                 saveImageToGallery(context, resource);
                             }
                         });

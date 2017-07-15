@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.isabella.dechat.R;
 import com.isabella.dechat.activity.MainActivity;
@@ -133,7 +132,7 @@ public class FriendFragment extends BaseFragment<FriendContact.FriendView, Frien
                 // 这里要利用adapter.getItem(position)来获取当前position所对应的对象
                 // Toast.makeText(getApplication(),
                 SortModel item = (SortModel) adapter.getItem(position);
-                MyToast.makeText(getActivity(), item.getName(), Toast.LENGTH_SHORT);
+                MyToast.getInstance().makeText(item.getName());
             }
         });
 

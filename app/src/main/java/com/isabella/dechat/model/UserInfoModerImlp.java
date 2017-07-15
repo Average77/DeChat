@@ -75,7 +75,7 @@ public class UserInfoModerImlp implements UserInfoContact.UserInfoModel {
                     public void subscribe(@NonNull ObservableEmitter<Long> e) throws Exception {
 
 
-                        IApplication.getApplication().daoSession.getPhotolistBeanDao().insertInTx(photolist);
+                        IApplication.getApplication().daoSession.getPhotolistBeanDao().insertOrReplaceInTx(photolist);
 
 
                     }

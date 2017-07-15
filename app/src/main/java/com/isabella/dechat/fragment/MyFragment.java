@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.isabella.dechat.R;
 import com.isabella.dechat.activity.MainActivity;
@@ -56,7 +55,7 @@ public class MyFragment extends IFragment {
     @OnClick(R.id.me_exit_login)
     public void onViewClicked() {
         PreferencesUtils.addConfigInfo(getActivity(),"isLogin",false);
-        MyToast.makeText(getActivity(),"退出登录成功!", Toast.LENGTH_SHORT);
+        MyToast.getInstance().makeText("退出登录成功!");
         new CookiesManager(IApplication.application).removeAllCookie();
         IApplication.setIsStart(true);
         toActivity(SplashActivity.class,null,0);

@@ -74,7 +74,7 @@ public class FriendModerImlp implements FriendContact.FriendModel{
                         public void subscribe(@NonNull ObservableEmitter<Long> e) throws Exception {
 
 
-                            IApplication.getApplication().daoSession.getFriendListDataBeanDao().insertInTx(date);
+                            IApplication.getApplication().daoSession.getFriendListDataBeanDao().insertOrReplaceInTx(date);
 
 
                         }

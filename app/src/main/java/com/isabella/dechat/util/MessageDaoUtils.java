@@ -26,7 +26,7 @@ public class MessageDaoUtils {
             public void subscribe(@NonNull ObservableEmitter<Long> e) throws Exception {
 
 
-                IApplication.getApplication().daoSession.getNearbyDataBeanDao().insertInTx(list);
+                IApplication.getApplication().daoSession.getNearbyDataBeanDao().insertOrReplaceInTx(list);
 
 
             }
