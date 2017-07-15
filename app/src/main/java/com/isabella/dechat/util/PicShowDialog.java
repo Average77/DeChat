@@ -1,8 +1,14 @@
 package com.isabella.dechat.util;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -10,13 +16,22 @@ import android.view.ViewGroup;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.isabella.dechat.R;
 import com.isabella.dechat.adapter.MyViewPager;
-import com.isabella.dechat.bean.UserInfoBean;
+import com.isabella.dechat.bean.PhotolistBean;
+import com.isabella.dechat.widget.MyToast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,15 +42,16 @@ import java.util.List;
 public class PicShowDialog extends Dialog {
     private Context context;
     private View view;
-    private List<UserInfoBean.DataBean.PhotolistBean> imageInfos;
+    private List<PhotolistBean> imageInfos;
     private MyViewPager vp;
     private List<View> views = new ArrayList<View>();
     private LayoutAnimationController lac;
     private LinearLayout ll_point;
     private ViewPagerAdapter pageAdapter;
     private int position;
+    private AlertDialog.Builder builder;
     private LinearLayout.LayoutParams paramsL = new LinearLayout.LayoutParams(10, 10);
-
+    private String imagePath;
 
     public PicShowDialog(Context context, int themeResId) {
         super(context, themeResId);
@@ -43,7 +59,7 @@ public class PicShowDialog extends Dialog {
     }
 
 
-    public PicShowDialog(Context context, List<UserInfoBean.DataBean.PhotolistBean> imageInfos, int position) {
+    public PicShowDialog(Context context, List<PhotolistBean> imageInfos, int position) {
         this(context, R.style.Pic_Dialog);
         this.imageInfos = imageInfos;
         this.position = position;
@@ -59,6 +75,7 @@ public class PicShowDialog extends Dialog {
         ll_point = (LinearLayout) findViewById(R.id.ll_point);
 //        init();
         initMyPageAdapter();
+        setDialog();
 //        vp.setAdapter(new ViewPagerAdapter());
         vp.setCurrentItem(position);
         vp.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -132,6 +149,8 @@ public class PicShowDialog extends Dialog {
     private class ViewPagerAdapter extends PagerAdapter {
 
 
+
+
         @Override
         public int getCount() {
             return imageInfos.size();
@@ -146,11 +165,20 @@ public class PicShowDialog extends Dialog {
         public Object instantiateItem(ViewGroup container, int position) {
             View view =View.inflate(context, R.layout.item_pic_show, null);
             PhotoView photoView = (PhotoView) view.findViewById(R.id.pic_pv);
-            GlideUtils.getInstance().haveCache(imageInfos.get(position).getImagePath(),photoView,context);
+            imagePath = imageInfos.get(position).getImagePath();
+
+            GlideUtils.getInstance().haveCache(imagePath,photoView,context);
             photoView.setOnPhotoTapListener(new OnPhotoTapListener() {
                 @Override
                 public void onPhotoTap(ImageView view, float x, float y) {
                     dismiss();
+                }
+            });
+            photoView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    builder.show();
+                    return false;
                 }
             });
                     ((ViewPager) container).addView(view);
@@ -166,6 +194,78 @@ public class PicShowDialog extends Dialog {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
+    public void saveImageToGallery(Context context, Bitmap bmp) {
 
+        // 首先保存图片
+        File file = Environment.getExternalStorageDirectory();
+        File appDir = new File(file, "DeChat");
+        if (!appDir.exists()) {
+            appDir.mkdirs();
+        }
+        String fileName = System.currentTimeMillis() + ".jpg";
+        File currentFile = new File(appDir, fileName);
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(currentFile);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+//        // 其次把文件插入到系统图库
+//        try {
+//            MediaStore.Images.Media.insertImage(context.getContentResolver(),
+//                    currentFile.getAbsolutePath(), fileName, null);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+
+        // 最后通知图库更新
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                Uri.fromFile(new File(currentFile.getPath()))));
+    }
+    private void setDialog() {
+        builder = new AlertDialog.Builder(context);
+        //设置对话框的图片
+        builder.setIcon(R.drawable.ic_dialog);
+        builder.setTitle("保存图片");
+        builder.setMessage("(๑´ㅂ`๑)亲,是否要保存图片到本地相册?");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Glide.with(context)
+                        .load(imagePath)
+                        .asBitmap()
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                //image.setImageBitmap(resource);
+                                MyToast.makeText(context, "保存成功", Toast.LENGTH_SHORT);
+                                saveImageToGallery(context, resource);
+                            }
+                        });
+
+
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+    }
 }
 

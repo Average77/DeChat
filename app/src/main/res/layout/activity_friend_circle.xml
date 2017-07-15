@@ -19,7 +19,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="朋友圈"
+            android:text="@string/friend_circle"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:textColor="@color/bg_text_color"
@@ -47,6 +47,11 @@
                 android:id="@+id/friend_circle_background"
                 android:src="@mipmap/ic_friend_background_default"
                 android:scaleType="centerCrop"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginTop="130dp"
+                android:background="@drawable/sp_background"/>
             <TextView
                 android:id="@+id/friend_circle_username_background"
                 android:layout_width="wrap_content"
@@ -59,17 +64,7 @@
                 android:layout_toStartOf="@+id/friend_circle_head"
                 android:layout_marginEnd="12dp"
                 android:layout_marginTop="10dp" />
-            <TextView
-                android:id="@+id/friend_circle_username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="UserName"
-                android:textSize="20sp"
-                android:textColor="@color/gray"
-                android:layout_alignTop="@+id/friend_circle_head"
-                android:layout_toStartOf="@+id/friend_circle_head"
-                android:layout_marginEnd="12dp"
-                android:layout_marginTop="10dp" />
+
             <ImageView
 
                 android:layout_width="100dp"

@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.horizontalselectedviewlibrary.HorizontalselectedView;
 import com.isabella.dechat.R;
@@ -79,7 +78,7 @@ public class RegisterActivity extends IActivity{
                             getData();
                             toActivity(PhoneRegisterActivity.class, null, 0);
                         } else {
-                            MyToast.makeText(RegisterActivity.this, getString(R.string.select_sex), Toast.LENGTH_SHORT);
+                            MyToast.getInstance().makeText(  getString(R.string.select_sex));
                         }
 
 

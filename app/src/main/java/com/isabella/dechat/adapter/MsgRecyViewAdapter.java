@@ -29,7 +29,7 @@ public class MsgRecyViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private boolean mIsStagger;
     private double distance;
     private Context context;
-    private int tag = 1; // 1 先行布局 2 瀑布流
+    private int tag = 1; // 1 线性布局 2 瀑布流
     private int itemWidth;
     java.text.DecimalFormat df = new java.text.DecimalFormat("0.0");
     private String format;

@@ -1,6 +1,7 @@
 package com.isabella.dechat.fragment;
 
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.LinearLayout;
 import com.isabella.dechat.R;
 import com.isabella.dechat.activity.FriendCircleActivity;
 import com.isabella.dechat.base.IFragment;
+import com.isabella.dechat.util.DialogUtils;
+import com.isabella.dechat.util.PreferencesUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,6 +29,7 @@ public class FreshFragment extends IFragment {
     @BindView(R.id.nearby_fresh)
     LinearLayout nearbyFresh;
     Unbinder unbinder;
+    private AlertDialog.Builder builder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,6 +37,8 @@ public class FreshFragment extends IFragment {
 
         View view = inflater.inflate(R.layout.fragment_fresh, container, false);
         unbinder = ButterKnife.bind(this, view);
+        builder = DialogUtils.setDialogLogin(getActivity());
+
         return view;
     }
 
@@ -46,7 +52,11 @@ public class FreshFragment extends IFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.friend_circle_fresh:
-               toActivity(FriendCircleActivity.class,null,0);
+                if ( PreferencesUtils.getValueByKey(getActivity(), "isLogin", false)) {
+                    toActivity(FriendCircleActivity.class, null, 0);
+                }else{
+                   builder.show();
+                }
                 break;
             case R.id.rish_scan_fresh:
                 break;

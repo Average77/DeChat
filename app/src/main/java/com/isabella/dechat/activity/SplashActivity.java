@@ -42,16 +42,6 @@ public class SplashActivity extends IActivity {
     boolean isExit;
     private AnimationDrawable drawable;
     String locationProvider;
-    Handler mHandler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            // TODO Auto-generated method stub
-            super.handleMessage(msg);
-            isExit = false;
-        }
-
-    };
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -60,7 +50,15 @@ public class SplashActivity extends IActivity {
 //            if (isFrist){
 //                toActivity(RegisterActivity.class,null,0);
 //            }
-            ivHeartBg.setVisibility(View.INVISIBLE);
+            if (msg.what==0) {
+                ivHeartBg.setVisibility(View.INVISIBLE);
+            }else if (msg.what==1){
+                isExit = false;
+            }else if(msg.what==2){
+
+                toActivity(MainActivity.class,null,0);
+                finish();
+            }
 //            registerBg.setVisibility(View.VISIBLE);
 //            loginBg.setVisibility(View.VISIBLE);
 
@@ -77,11 +75,27 @@ public class SplashActivity extends IActivity {
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
         getLocation(this);
-        //toActivity(MainActivity.class,null,0);
+        if (!IApplication.isStart()){
+            registerBg.setEnabled(false);
+            loginBg.setEnabled(false);
+            registerBg.setVisibility(View.INVISIBLE);
+            loginBg.setVisibility(View.INVISIBLE);
+            handler.sendEmptyMessageDelayed(2,1000);
+        }else{
+            registerBg.setEnabled(true);
+            loginBg.setEnabled(true);
+            registerBg.setVisibility(View.VISIBLE);
+            loginBg.setVisibility(View.VISIBLE);
+            AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
+            alphaAnimation.setDuration(2900);
+            registerBg.startAnimation(alphaAnimation);
+            loginBg.startAnimation(alphaAnimation);
+        }
         drawable = (AnimationDrawable) getResources().getDrawable(R.drawable.anim_heart_bg);
-
         //imageView.setBackground(drawable);
         ivHeartBg.setBackgroundDrawable(drawable);
+        drawable.start();
+
 
 
     }
@@ -91,13 +105,10 @@ public class SplashActivity extends IActivity {
         super.onResume();
         //registerBg.setVisibility(View.INVISIBLE);
         //loginBg.setVisibility(View.INVISIBLE);
-        drawable.start();
         handler.sendEmptyMessageDelayed(0, 1400);
 
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-        alphaAnimation.setDuration(2900);
-        registerBg.startAnimation(alphaAnimation);
-        loginBg.startAnimation(alphaAnimation);
+
+
     }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -112,7 +123,7 @@ public class SplashActivity extends IActivity {
         if (!isExit) {
             isExit = true;
             Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
-            mHandler.sendEmptyMessageDelayed(0, 2000);
+            handler.sendEmptyMessageDelayed(1, 2000);
         } else {
             //  Intent intent = new Intent(Intent.ACTION_MAIN);
             // intent.addCategory(Intent.CATEGORY_HOME);
@@ -133,6 +144,7 @@ public class SplashActivity extends IActivity {
                 toActivity(RegisterActivity.class, null, 0);
                 break;
             case R.id.login_bg:
+              //  PreferencesUtils.getValueByKey(SplashActivity.this, "isToLogin", true);
                 toActivity(LoginActivity.class, null, 0);
                 break;
         }

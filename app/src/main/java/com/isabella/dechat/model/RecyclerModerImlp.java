@@ -47,6 +47,7 @@ public class RecyclerModerImlp implements RecyclerContact.RecyclerModel {
 
                     List<NearbyDataBean> nearbyDataBeen = IApplication.getApplication().daoSession.getNearbyDataBeanDao().queryBuilder()
                             .orderDesc(NearbyDataBeanDao.Properties.Id)
+                            .distinct()
                             .limit(20)
                             .build().list();
 

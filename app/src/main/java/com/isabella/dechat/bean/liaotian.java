@@ -90,7 +90,7 @@ public class liaotian {
 
         @Override
         public String toString() {
-            return "DataBean{" +
+            return "UserInfoDataBean{" +
                     "message='" + message + '\'' +
                     ", userId=" + userId +
                     ", touserId=" + touserId +

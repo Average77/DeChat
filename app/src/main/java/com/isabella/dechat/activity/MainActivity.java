@@ -1,5 +1,6 @@
 package com.isabella.dechat.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -7,8 +8,9 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
@@ -16,10 +18,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isabella.dechat.R;
+import com.isabella.dechat.base.BaseActivity;
+import com.isabella.dechat.bean.LoginBean;
+import com.isabella.dechat.contact.LoginContact;
 import com.isabella.dechat.fragment.FreshFragment;
 import com.isabella.dechat.fragment.FriendFragment;
 import com.isabella.dechat.fragment.MessageFragment;
 import com.isabella.dechat.fragment.MyFragment;
+import com.isabella.dechat.presenter.LoginPresenter;
+import com.isabella.dechat.util.PreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity<LoginContact.LoginView,LoginPresenter> implements LoginContact.LoginView{
     @BindView(R.id.container_fram_main)
     FrameLayout containerFramMain;
     @BindView(R.id.tabber_rg_main)
@@ -50,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
     };
+  LoginPresenter loginPresenter=new LoginPresenter();
+    @Override
+    public LoginPresenter initPresenter() {
+        return loginPresenter;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         createFragment(savedInstanceState);
         switchFragment(0);
         dechat.setText("消息");
+
         tabberRgMain.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -66,30 +80,47 @@ public class MainActivity extends AppCompatActivity {
                 switch (checkedId) {
 
                     case R.id.tabber_rb_message:
-                       dechat.setText("消息");
+                       dechat.setText("寻缘");
                         switchFragment(0);
+                        InputType(group);
                         break;
 
                     case R.id.tabber_rb_friend:
                         switchFragment(1);
                         dechat.setText("好友");
+                        InputType(group);
                         break;
 
                     case R.id.tabber_rb_fresh:
                         switchFragment(2);
                         dechat.setText("新鲜事");
+                        InputType(group);
                         break;
 
                     case R.id.tabber_rb_me:
                         switchFragment(3);
                         dechat.setText("我的");
+                        InputType(group);
                         break;
 
                 }
             }
         });
-    }
+        if (PreferencesUtils.getValueByKey(this, "isLogin", false)){
+           // PreferencesUtils.addConfigInfo(IApplication.getApplication(),"isToLogin",false);
+            loginPresenter.getData(PreferencesUtils.getValueByKey(this, "phone", ""),PreferencesUtils.getValueByKey(this, "password", ""));
 
+        }
+    }
+    private void InputType(View view) {
+        //判断输入法的隐藏状态
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+
+        }
+    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -168,6 +199,16 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.plus)
     public void onViewClicked() {
+
+    }
+
+    @Override
+    public void success(LoginBean loginBean) {
+
+    }
+
+    @Override
+    public void failed(Throwable e) {
 
     }
 }

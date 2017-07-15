@@ -37,7 +37,7 @@
     <string name="select_head">请从相册选择图片或者拍照上传</string>
     <string name="camera">拍照</string>
     <string name="photo">打开相册</string>
-    <string name="message">消息</string>
+    <string name="message">寻缘</string>
     <string name="friend">好友</string>
     <string name="fresh">发现</string>
     <string name="me">我的</string>
@@ -48,6 +48,17 @@
     <string name="list_mode_list">点我切换模式-列表模式</string>
     <string name="list_mode_stagger">点我切换模式-图片模式</string>
     <string name="list_menu">菜单栏todo</string>
+    <string name="user_info">个人资料</string>
+    <string name="info_last_time">最后上线时间</string>
+    <string name="info_nickname">昵称 :</string>
+    <string name="info_sex">性别 :</string>
+    <string name="info_age">年龄 :</string>
+    <string name="info_address">地址 :</string>
+    <string name="info_intro">介绍 :</string>
+    <string name="to_msg">发消息</string>
+    <string name="exit_login">退出登录</string>
+    <string name="to_login">点击图片登录查看好友列表</string>
+    <string name="search">搜索</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

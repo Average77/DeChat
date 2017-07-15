@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.isabella.dechat.R;
 import com.isabella.dechat.base.BaseActivity;
@@ -83,11 +82,11 @@ public class IntroActivity extends BaseActivity<RegisterContact.RegisterView, Re
                         if (NetUtil.isNetworkAvailable(IntroActivity.this)) {
                             if (TextUtils.isEmpty(detailNickname.getText().toString())) {
 
-                                MyToast.makeText(IntroActivity.this, getString(R.string.nickname_not_null), Toast.LENGTH_SHORT);
+                                MyToast.getInstance().makeText(getString(R.string.nickname_not_null));
                             } else if (TextUtils.isEmpty(detailInfo.getText().toString())) {
-                                MyToast.makeText(IntroActivity.this, getString(R.string.intro_not_null), Toast.LENGTH_SHORT);
+                                MyToast.getInstance().makeText(getString(R.string.intro_not_null));
                             } else if (getString(R.string.select_area).equals(detailSelectArea.getText().toString())) {
-                                MyToast.makeText(IntroActivity.this, getString(R.string.area_not_null), Toast.LENGTH_SHORT);
+                                MyToast.getInstance().makeText( getString(R.string.area_not_null));
                             } else {
                                 detailBar.setVisibility(View.VISIBLE);
                                 registerPresenter.getData(PreferencesUtils.getValueByKey(IntroActivity.this, "phone", ""), Md5Utils.getMD5(PreferencesUtils.getValueByKey(IntroActivity.this, "password", "")),
@@ -219,11 +218,12 @@ public class IntroActivity extends BaseActivity<RegisterContact.RegisterView, Re
         if (registerBean.getResult_code()==200) {
             detailBar.setVisibility(View.GONE);
             PreferencesUtils.addConfigInfo(this,"from",0);
-            toActivity(UploadActivity.class,null,0);
+            PreferencesUtils.addConfigInfo(this, "isLogin", true);
             PreferencesUtils.addConfigInfo(this, "nickname", registerBean.getData().getNickname());
             PreferencesUtils.addConfigInfo(this, "userId", registerBean.getData().getUserId());
+            toActivity(UploadActivity.class,null,0);
         }else{
-            MyToast.makeText(this,registerBean.getResult_message(),Toast.LENGTH_SHORT);
+            MyToast.getInstance().makeText(registerBean.getResult_message());
         }
     }
 
@@ -231,7 +231,7 @@ public class IntroActivity extends BaseActivity<RegisterContact.RegisterView, Re
     public void failed(Throwable e) {
         detailBar.setVisibility(View.GONE);
         Log.d("IntroActivity", "e:" + e);
-        MyToast.makeText(this, "注册失败", Toast.LENGTH_SHORT);
+        MyToast.getInstance().makeText("注册失败");
 
     }
 }

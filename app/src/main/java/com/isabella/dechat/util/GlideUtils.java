@@ -36,7 +36,7 @@ public class GlideUtils {
     public void haveCache(String url, ImageView view, Context context){
         Glide.with(context).load(url)
                 .placeholder(R.drawable.ic_album_default)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .error(R.drawable.ic_album_default)
                 .into(view);
 
@@ -44,7 +44,7 @@ public class GlideUtils {
     public void photo(String url, ImageView view, Context context){
         Glide.with(context).load(url)
                 .placeholder(R.mipmap.ic_friend_background_default)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .error(R.mipmap.ic_friend_background_default)
                 .into(view);
 
@@ -53,7 +53,7 @@ public class GlideUtils {
     public void haveCacheLarger(String url, ImageView view, Context context){
         Glide.with(context).load(url)
                 .placeholder(R.drawable.ic_album_default)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .error(R.drawable.ic_album_default)
                 .centerCrop()
                 .into(view);
@@ -65,7 +65,7 @@ public class GlideUtils {
                 .placeholder(R.drawable.ic_album_default)
                 .error(R.drawable.ic_album_default)
                 .transform(new CenterCrop(context),new GlideRound(context,10))
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(view);
     }
     //把网络请求图片设置成圆角
@@ -74,7 +74,7 @@ public class GlideUtils {
                 .placeholder(R.drawable.woman_user_round_icon_default)
                 .error(R.drawable.woman_user_round_icon_default)
                 .transform(new CenterCrop(context),new GlideRound(context,50))
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(view);
     }
     //把本地bitmap设置成圆角

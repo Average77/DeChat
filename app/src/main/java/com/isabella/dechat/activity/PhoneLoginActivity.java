@@ -12,7 +12,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.isabella.dechat.R;
 import com.isabella.dechat.base.IActivity;
@@ -55,7 +54,7 @@ public class PhoneLoginActivity extends IActivity {
                     if (msg.arg1 == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//验证成功通过
                         toActivity(MainActivity.class, null, 0);
                     } else {
-                        MyToast.makeText(PhoneLoginActivity.this, "验证码错误", Toast.LENGTH_SHORT);
+                        MyToast.getInstance().makeText( "验证码错误");
                     }case 1:
                     if(msg.arg2 == SMSSDK.RESULT_COMPLETE){//发送成功的情况
                         if(msg.arg1 == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE){//验证成功通过
@@ -63,7 +62,7 @@ public class PhoneLoginActivity extends IActivity {
                            // MyToast.makeText(PhoneLoginActivity.this, getString(R.string.register_success), Toast.LENGTH_SHORT);
                         }
                     }else{
-                        MyToast.makeText(PhoneLoginActivity.this, "验证码错误", Toast.LENGTH_SHORT);
+                        MyToast.getInstance().makeText(  "验证码错误");
                     }
                     break;
             }
@@ -163,16 +162,16 @@ public class PhoneLoginActivity extends IActivity {
             case R.id.phone_login_obtain_core:
                 boolean chinaPhoneLegal = PhoneCheckUtils.isChinaPhoneLegal(phoneLoginPhone.getText().toString().trim());
                 if (phoneLoginPhone.getText().toString().trim().length() != 11) {
-                    MyToast.makeText(this, getString(R.string.phone_core), Toast.LENGTH_SHORT);
+                    MyToast.getInstance().makeText( getString(R.string.phone_core));
                     return;
                 }
                 if (!chinaPhoneLegal) {
-                    MyToast.makeText(this, getString(R.string.phone_style_not_right), Toast.LENGTH_SHORT);
+                    MyToast.getInstance().makeText( getString(R.string.phone_style_not_right));
                     return;
                 }
                 SMSSDK.getVerificationCode("86", phoneLoginPhone.getText().toString().trim());
                 //  SMSSDK.submitVerificationCode("86", phoneLoginPhone.getText().toString().trim(),"1234");
-                MyToast.makeText(PhoneLoginActivity.this, "验证码已发出,请注意查收", Toast.LENGTH_SHORT);
+                MyToast.getInstance().makeText(  "验证码已发出,请注意查收");
                 phoneLoginObtainCore.setEnabled(false);
                 phoneLoginObtainCore.setBackgroundResource(R.drawable.sp_unfocus);
                 phoneLoginCore.requestFocus();
@@ -181,9 +180,9 @@ public class PhoneLoginActivity extends IActivity {
                 break;
             case R.id.phone_login_sure:
                 if (TextUtils.isEmpty(phoneLoginPhone.getText().toString())) {
-                    MyToast.makeText(this, getString(R.string.phone_not_null), Toast.LENGTH_SHORT);
+                    MyToast.getInstance().makeText(  getString(R.string.phone_not_null));
                 } else if (TextUtils.isEmpty(phoneLoginCore.getText().toString())) {
-                    MyToast.makeText(this, getString(R.string.core_not_null), Toast.LENGTH_SHORT);
+                    MyToast.getInstance().makeText( getString(R.string.core_not_null));
                 } else {
                     SMSSDK.submitVerificationCode("86", phoneLoginPhone.getText().toString(), phoneLoginCore.getText().toString());
 

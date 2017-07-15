@@ -63,7 +63,6 @@ public class MessageFragment extends BaseFragment<RecyclerContact.RecyView, Recy
 
         initView();
         refreshLayout.setType(SpringView.Type.FOLLOW);
-
         return view;
     }
 
@@ -135,21 +134,22 @@ public class MessageFragment extends BaseFragment<RecyclerContact.RecyView, Recy
             @Override
             public void onItemClick(View view, int position) {
                 //  Toast.makeText(getActivity(), "click " + position+"", Toast.LENGTH_SHORT).show();
-                Bundle bundle=new Bundle();
-                NearbyDataBean nearbyDataBean = list.get(position);
 
-                Intent intent=new Intent(getActivity(),UserInfoActivity.class);
-                intent.putExtra("userId",nearbyDataBean.getUserId());
-                intent.putExtra("nickname",nearbyDataBean.getNickname());
-                intent.putExtra("imagePath",nearbyDataBean.getImagePath());
-                intent.putExtra("picWidth",nearbyDataBean.getPicWidth());
-                intent.putExtra("picHeight",nearbyDataBean.getPicHeight());
-                intent.putExtra("intro",nearbyDataBean.getIntroduce());
-                intent.putExtra("sex",nearbyDataBean.getGender());
-                intent.putExtra("address",nearbyDataBean.getArea());
-                intent.putExtra("age",nearbyDataBean.getAge());
-                intent.putExtra("lasttime",nearbyDataBean.getLasttime());
-                startActivity(intent);
+
+                    NearbyDataBean nearbyDataBean = list.get(position);
+
+                    Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                    intent.putExtra("userId", nearbyDataBean.getUserId());
+                    intent.putExtra("nickname", nearbyDataBean.getNickname());
+                    intent.putExtra("imagePath", nearbyDataBean.getImagePath());
+                    intent.putExtra("picWidth", nearbyDataBean.getPicWidth());
+                    intent.putExtra("picHeight", nearbyDataBean.getPicHeight());
+                    intent.putExtra("intro", nearbyDataBean.getIntroduce());
+                    intent.putExtra("sex", nearbyDataBean.getGender());
+                    intent.putExtra("address", nearbyDataBean.getArea());
+                    intent.putExtra("age", nearbyDataBean.getAge());
+                    intent.putExtra("lasttime", nearbyDataBean.getLasttime());
+                    startActivity(intent);
                // MyToast.makeText(getActivity(), list.get(position).getUserId() + "   " + position, Toast.LENGTH_SHORT);
 
             }
@@ -201,30 +201,32 @@ public class MessageFragment extends BaseFragment<RecyclerContact.RecyView, Recy
     @Override
     public void success(List<NearbyDataBean> data, boolean isData) {
         refreshLayout.onFinishFreshAndLoad();
-
-        if (page == 1) {
-            list.clear();
-        }
-
-        if (isData && page == 2) {
-        } else {
-            Log.d("MessageFragment", "data:" + data);
-            // adapter.setData(data, page);
-
-            if (data != null || data.size() != 0) {
-                list.addAll(data);
-
+        if (data!=null&&data.size()!=0) {
+            if (page == 1) {
+                list.clear();
             }
-            //notifyDataSetChanged();
-            //list.addAll(data);
+
+            if (isData && page == 2) {
+            } else {
+                Log.d("MessageFragment", "data:" + data);
+                // adapter.setData(data, page);
+
+                if (data != null || data.size() != 0) {
+                    list.addAll(data);
+
+                }
+                //notifyDataSetChanged();
+                //list.addAll(data);
+            }
+            adapter.notifyDataSetChanged();
         }
-        adapter.notifyDataSetChanged();
 
 
     }
 
     @Override
     public void failed(Throwable e) {
+        Log.d("MessageFragment", "e:" + e);
 
     }
 

@@ -50,12 +50,23 @@ public class LoginModerImlp implements LoginContact.LoginModel {
             public void onSuccess(String result) {
                 System.out.println("result = " + result);
                 LoginBean loginBean = GsonUtil.getInstance().fromJson(result, LoginBean.class);
-                loginModelImplResult.success(loginBean);
+              //  if (PreferencesUtils.getValueByKey(IApplication.getApplication(),"isToLogin",true)) {
+                    loginModelImplResult.success(loginBean);
+             //   }
+                if (loginBean.getResult_code()==200){
+                    PreferencesUtils.addConfigInfo(IApplication.getApplication(),"isLogin",true);
+                }else{
+                    PreferencesUtils.addConfigInfo(IApplication.getApplication(),"isLogin",false);
+                }
             }
 
             @Override
             public void onFailed(Throwable e) {
-                loginModelImplResult.failed(e);
+              //  if (PreferencesUtils.getValueByKey(IApplication.getApplication(),"isToLogin",true)) {
+                    loginModelImplResult.failed(e);
+              //  }
+
+                PreferencesUtils.addConfigInfo(IApplication.getApplication(),"isLogin",false);
 
             }
         });

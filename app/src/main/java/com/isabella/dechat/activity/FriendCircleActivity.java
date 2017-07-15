@@ -31,8 +31,6 @@ public class FriendCircleActivity extends IActivity {
     ImageView friendCircleBackground;
     @BindView(R.id.friend_circle_username_background)
     TextView friendCircleUsernameBackground;
-    @BindView(R.id.friend_circle_username)
-    TextView friendCircleUsername;
     @BindView(R.id.friend_circle_head)
     ImageView friendCircleHead;
 
@@ -47,7 +45,6 @@ public class FriendCircleActivity extends IActivity {
             GlideUtils.getInstance().havaRound(PreferencesUtils.getValueByKey(this, "imagepath", ""), friendCircleHead, this);
         }
         friendCircleUsernameBackground.setText(nickname);
-        friendCircleUsername.setText(nickname);
     }
 
     @OnClick({R.id.friend_circle_back, R.id.friend_circle_upload, R.id.friend_circle_background, R.id.friend_circle_head})

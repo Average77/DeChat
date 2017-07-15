@@ -21,7 +21,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.isabella.dechat.R;
 import com.isabella.dechat.base.AppManager;
@@ -94,12 +93,14 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
                     PreferencesUtils.addConfigInfo(UploadActivity.this, "isSetPhoto", temp);
                     AppManager.getAppManager().finishOtherActivity();
                     AppManager.getAppManager().finishActivity(SplashActivity.class);
-                }
-                if (success) {
-                    finish();
+                    AppManager.getAppManager().finishActivity(RegisterActivity.class);
+                    AppManager.getAppManager().finishActivity(PhoneRegisterActivity.class);
+                    AppManager.getAppManager().finishActivity(IntroActivity.class);
                 }else{
-                    MyToast.makeText(UploadActivity.this, "网络过慢,请您重新上传", Toast.LENGTH_SHORT);
+                    finish();
                 }
+
+
 
             }
         }
@@ -109,6 +110,7 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
     private AlertDialog.Builder builder;
     private boolean temp = false;
     private boolean success = false;
+    private AlertDialog.Builder dialogLogin;
 
     @Override
     public UploadPresenter initPresenter() {
@@ -136,6 +138,7 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
             uploadSetHead.setText("设置头像");
         }
         builder = DialogUtils.setDialog(this);
+        dialogLogin = DialogUtils.setDialogLogin(this);
         RxView.clicks(uploadCamera).throttleFirst(1, TimeUnit.MILLISECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Object>() {
@@ -145,7 +148,7 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
                             toCheckPermissionCamera();
                             temp = true;
                         } else {
-                            builder.show();
+                            UploadActivity.this.builder.show();
                         }
 
                     }
@@ -159,7 +162,7 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
                             toPhoto();
                             temp = true;
                         } else {
-                            builder.show();
+                            UploadActivity.this.builder.show();
                         }
 
                     }
@@ -246,14 +249,14 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
 
     @OnPermissionDenied({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA})
     public void onDenied() {
-        MyToast.makeText(this, "权限被拒绝", Toast.LENGTH_SHORT);
+        MyToast.getInstance().makeText( "权限被拒绝");
 
     }
 
 
     @OnNeverAskAgain({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA})
     public void onNeverAsyAgain() {
-        MyToast.makeText(this, "不再提示", Toast.LENGTH_SHORT);
+        MyToast.getInstance().makeText( "不再提示");
     }
 
 
@@ -405,7 +408,7 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
 
 
         if (!file.exists()) {
-            MyToast.makeText(this, " 照片不存在", Toast.LENGTH_SHORT);
+            MyToast.getInstance().makeText(  " 照片不存在");
             return;
         }
         presenter.getData(file);
@@ -414,17 +417,24 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
 
     @Override
     public void success(UploadPhotoBean uploadPhotoBean) {
-        success = true;
-       // handler.sendEmptyMessage(1);
-        MyToast.makeText(IApplication.getApplication(), "上传成功", Toast.LENGTH_SHORT);
-        if (from == 0) {
-            PreferencesUtils.addConfigInfo(this, "imagepath", uploadPhotoBean.getHeadImagePath());
+
+        if (uploadPhotoBean.getResult_code()==301){
+
+            IApplication.setIsLogin(false);
+            dialogLogin.show();
+        }else {
+
+            // handler.sendEmptyMessage(1);
+            MyToast.getInstance().makeText( "上传成功");
+            if (from == 0) {
+                PreferencesUtils.addConfigInfo(this, "imagepath", uploadPhotoBean.getHeadImagePath());
+            }
         }
     }
 
     @Override
     public void failed(Throwable e) {
-        MyToast.makeText(UploadActivity.this, "上传失败", Toast.LENGTH_SHORT);
+        MyToast.getInstance().makeText(  "上传失败");
         Log.d("UploadActivity", "e:" + e);
     }
 }

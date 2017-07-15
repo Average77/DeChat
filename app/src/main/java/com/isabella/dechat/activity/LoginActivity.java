@@ -16,14 +16,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.isabella.dechat.R;
 import com.isabella.dechat.base.AppManager;
 import com.isabella.dechat.base.BaseActivity;
 import com.isabella.dechat.bean.LoginBean;
 import com.isabella.dechat.contact.LoginContact;
-import com.isabella.dechat.core.JNICore;
 import com.isabella.dechat.presenter.LoginPresenter;
 import com.isabella.dechat.util.DialogUtils;
 import com.isabella.dechat.util.NetUtil;
@@ -103,19 +101,18 @@ public class LoginActivity extends BaseActivity<LoginContact.LoginView, LoginPre
                     public void accept(@NonNull Object o) throws Exception {
                         if (NetUtil.isNetworkAvailable(LoginActivity.this)) {
                             if (TextUtils.isEmpty(loginPhone.getText().toString())) {
-                                MyToast.makeText(LoginActivity.this, getString(R.string.phone_email_not_null), Toast.LENGTH_SHORT);
+                                MyToast.getInstance().makeText( getString(R.string.phone_email_not_null));
                             } else if (TextUtils.isEmpty(loginPassword.getText().toString())) {
-                                MyToast.makeText(LoginActivity.this, getString(R.string.password_not_null), Toast.LENGTH_SHORT);
+                                MyToast.getInstance().makeText(  getString(R.string.password_not_null));
                             } else if (loginPassword.getText().toString().length() < 6) {
-                                MyToast.makeText(LoginActivity.this, "密码不能小于6位", Toast.LENGTH_SHORT);
+                                MyToast.getInstance().makeText(  "密码不能小于6位");
                             } else {
                                 loginBar.setVisibility(View.VISIBLE);
                                 presenter.getData(loginPhone.getText().toString(), loginPassword.getText().toString());
 
 
                             }
-                            String sign = JNICore.getSign("123456");
-                            System.out.println("sign = " + sign);
+
 
                         } else {
                             builder.show();
@@ -185,7 +182,7 @@ public class LoginActivity extends BaseActivity<LoginContact.LoginView, LoginPre
                 toActivity(PhoneLoginActivity.class, null, 0);
 //                Snackbar.make(container, "此功能不能真正登录", Snackbar.LENGTH_SHORT)
 //                        .show();
-                  MyToast.makeText(this,"此功能不能真正登录" , Toast.LENGTH_SHORT);
+                MyToast.getInstance().makeText( "此功能不能真正登录" );
                 break;
         }
     }
@@ -198,11 +195,14 @@ public class LoginActivity extends BaseActivity<LoginContact.LoginView, LoginPre
             PreferencesUtils.addConfigInfo(this, "nickname", loginBean.getData().getNickname());
             PreferencesUtils.addConfigInfo(this, "imagepath", loginBean.getData().getImagepath());
             PreferencesUtils.addConfigInfo(this, "userId", loginBean.getData().getUserId());
+            PreferencesUtils.addConfigInfo(this, "phone", loginBean.getData().getPhone());
+            PreferencesUtils.addConfigInfo(this, "password", loginPassword.getText().toString());
             Log.d("LoginActivity", "loginBean.getData().getUserId():" + loginBean.getData().getUserId());
+            PreferencesUtils.addConfigInfo(this, "isLogin", true);
             toActivity(MainActivity.class, null, 0);
             finish();
         } else {
-            MyToast.makeText(this, loginBean.getResult_message(), Toast.LENGTH_SHORT);
+            MyToast.getInstance().makeText( loginBean.getResult_message());
         }
         loginBar.setVisibility(View.GONE);
     }
@@ -210,8 +210,14 @@ public class LoginActivity extends BaseActivity<LoginContact.LoginView, LoginPre
     @Override
     public void failed(Throwable e) {
         Log.d("LoginActivity", "e:" + e);
-        MyToast.makeText(this, "登陆失败", Toast.LENGTH_SHORT);
+        MyToast.getInstance().makeText(  "登陆失败");
         loginBar.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
     }
 }

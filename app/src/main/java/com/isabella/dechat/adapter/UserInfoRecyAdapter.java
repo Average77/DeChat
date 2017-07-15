@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.isabella.dechat.R;
-import com.isabella.dechat.bean.UserInfoBean;
+import com.isabella.dechat.bean.PhotolistBean;
 import com.isabella.dechat.util.GlideUtils;
 
 import java.util.List;
@@ -20,11 +20,11 @@ import java.util.List;
 
 public class UserInfoRecyAdapter extends RecyclerView.Adapter<UserInfoRecyAdapter.CViewHolder> {
     private LayoutInflater inflater;
-    private List<UserInfoBean.DataBean.PhotolistBean> list;
+    private List<PhotolistBean> list;
     private Context context;
     private MyItemClickListener mItemClickListener = null;
 
-    public UserInfoRecyAdapter(List<UserInfoBean.DataBean.PhotolistBean> list, Context context) {
+    public UserInfoRecyAdapter(List<PhotolistBean> list, Context context) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);

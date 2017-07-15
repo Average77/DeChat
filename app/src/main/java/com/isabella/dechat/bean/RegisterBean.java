@@ -168,7 +168,7 @@ public class RegisterBean {
 
         @Override
         public String toString() {
-            return "DataBean{" +
+            return "UserInfoDataBean{" +
                     "createtime=" + createtime +
                     ", phone='" + phone + '\'' +
                     ", area='" + area + '\'' +

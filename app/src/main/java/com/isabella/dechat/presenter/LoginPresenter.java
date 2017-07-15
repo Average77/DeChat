@@ -21,12 +21,20 @@ public class LoginPresenter extends BasePresenter<LoginContact.LoginView> {
         registerModerImlp.getData(phone, password, new LoginContact.LoginModelImplResult() {
             @Override
             public void success(LoginBean loginBean) {
-                view.success(loginBean);
+                try {
+                    view.success(loginBean);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
             public void failed(Throwable e) {
-                view.failed(e);
+                try {
+                    view.failed(e);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
             }
         });
     }

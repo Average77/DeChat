@@ -1,7 +1,5 @@
 package com.isabella.dechat.bean;
 
-import java.util.List;
-
 /**
  * Created by Administrator on 2017/7/12.
  */
@@ -15,7 +13,7 @@ public class UserInfoBean {
      */
 
     private String result_message;
-    private DataBean data;
+    private UserInfoDataBean data;
     private int result_code;
 
     public String getResult_message() {
@@ -26,11 +24,11 @@ public class UserInfoBean {
         this.result_message = result_message;
     }
 
-    public DataBean getData() {
+    public UserInfoDataBean getData() {
         return data;
     }
 
-    public void setData(DataBean data) {
+    public void setData(UserInfoDataBean data) {
         this.data = data;
     }
 
@@ -42,154 +40,5 @@ public class UserInfoBean {
         this.result_code = result_code;
     }
 
-    public static class DataBean {
 
-        private String area;
-        private long lasttime;
-        private long createtime;
-        private String gender;
-        private String introduce;
-        private String imagePath;
-        private String nickname;
-        private int userId;
-        private List<PhotolistBean> photolist;
-
-        public String getArea() {
-            return area;
-        }
-
-        public void setArea(String area) {
-            this.area = area;
-        }
-
-        public long getLasttime() {
-            return lasttime;
-        }
-
-        public void setLasttime(long lasttime) {
-            this.lasttime = lasttime;
-        }
-
-        public long getCreatetime() {
-            return createtime;
-        }
-
-        public void setCreatetime(long createtime) {
-            this.createtime = createtime;
-        }
-
-        public String getGender() {
-            return gender;
-        }
-
-        public void setGender(String gender) {
-            this.gender = gender;
-        }
-
-        public String getIntroduce() {
-            return introduce;
-        }
-
-        public void setIntroduce(String introduce) {
-            this.introduce = introduce;
-        }
-
-        public String getImagePath() {
-            return imagePath;
-        }
-
-        public void setImagePath(String imagePath) {
-            this.imagePath = imagePath;
-        }
-
-        public String getNickname() {
-            return nickname;
-        }
-
-        public void setNickname(String nickname) {
-            this.nickname = nickname;
-        }
-
-        public int getUserId() {
-            return userId;
-        }
-
-        public void setUserId(int userId) {
-            this.userId = userId;
-        }
-
-        public List<PhotolistBean> getPhotolist() {
-            return photolist;
-        }
-
-        public void setPhotolist(List<PhotolistBean> photolist) {
-            this.photolist = photolist;
-        }
-
-        public static class PhotolistBean {
-            /**
-             * picWidth : 720
-             * timer : 1499842558230
-             * picHeight : 720
-             * imagePath : http://qhb.2dyt.com/MyInterface/images/e2335022-7880-4a24-a987-4bba7abea51f.jpg
-             * albumId : 5
-             * userId : 21
-             */
-
-            private int picWidth;
-            private long timer;
-            private int picHeight;
-            private String imagePath;
-            private int albumId;
-            private int userId;
-
-            public int getPicWidth() {
-                return picWidth;
-            }
-
-            public void setPicWidth(int picWidth) {
-                this.picWidth = picWidth;
-            }
-
-            public long getTimer() {
-                return timer;
-            }
-
-            public void setTimer(long timer) {
-                this.timer = timer;
-            }
-
-            public int getPicHeight() {
-                return picHeight;
-            }
-
-            public void setPicHeight(int picHeight) {
-                this.picHeight = picHeight;
-            }
-
-            public String getImagePath() {
-                return imagePath;
-            }
-
-            public void setImagePath(String imagePath) {
-                this.imagePath = imagePath;
-            }
-
-            public int getAlbumId() {
-                return albumId;
-            }
-
-            public void setAlbumId(int albumId) {
-                this.albumId = albumId;
-            }
-
-            public int getUserId() {
-                return userId;
-            }
-
-            public void setUserId(int userId) {
-                this.userId = userId;
-            }
-        }
-    }
 }
