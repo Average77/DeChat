@@ -37,9 +37,10 @@
     <string name="select_head">请从相册选择图片或者拍照上传</string>
     <string name="camera">拍照</string>
     <string name="photo">打开相册</string>
-    <string name="message">寻缘</string>
+    <string name="recommend">寻缘</string>
     <string name="friend">好友</string>
     <string name="fresh">发现</string>
+    <string name="message">消息</string>
     <string name="me">我的</string>
     <string name="friend_circle">朋友圈</string>
     <string name="rich_scan">扫一扫</string>

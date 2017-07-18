@@ -40,6 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center"
+            android:divider="@color/background"
             android:background="@color/bg_text_color"
             android:listSelector="@drawable/comm_btn_selector" />
     </com.liaoinstan.springview.widget.SpringView>

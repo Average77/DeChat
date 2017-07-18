@@ -14,9 +14,7 @@ import java.io.OutputStream;
 
 import static android.graphics.BitmapFactory.decodeFile;
 
-/**
- * Created by muhanxi on 17/7/6.
- */
+
 
 public class ImageResizeUtils {
 

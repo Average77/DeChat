@@ -1,8 +1,6 @@
 package com.isabella.dechat.core;
 
-/**
- * Created by muhanxi on 17/7/4.
- */
+
 
 public class JNICore {
 

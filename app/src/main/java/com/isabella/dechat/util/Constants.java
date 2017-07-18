@@ -1,8 +1,6 @@
 package com.isabella.dechat.util;
 
-/**
- * Created by muhanxi on 17/7/6.
- */
+
 
 public class Constants {
 

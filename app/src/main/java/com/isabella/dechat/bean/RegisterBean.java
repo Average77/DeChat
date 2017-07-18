@@ -77,6 +77,15 @@ public class RegisterBean {
         private String age;
         private double lat;
         private double lng;
+        private  String yxpassword;
+
+        public String getYxpassword() {
+            return yxpassword;
+        }
+
+        public void setYxpassword(String yxpassword) {
+            this.yxpassword = yxpassword;
+        }
 
         public double getLat() {
             return lat;

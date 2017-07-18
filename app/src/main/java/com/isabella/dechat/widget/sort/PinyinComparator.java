@@ -6,11 +6,6 @@ import java.util.Comparator;
 
 
 
-/**
- * 拼音的比较器
- * @author Angus
- *
- */
 public class PinyinComparator implements Comparator<SortModel> {
 
 	public int compare(SortModel o1, SortModel o2) {

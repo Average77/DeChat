@@ -6,9 +6,7 @@ import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 
-/**
- * Created by muhanxi on 17/6/19.
- */
+
 
 public abstract  class BaseObserver implements Observer<String> {
 

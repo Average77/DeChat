@@ -14,9 +14,7 @@ import retrofit2.http.PartMap;
 import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 
-/**
- * Created by muhanxi on 17/6/19.
- */
+
 
 public interface ApiService {
 

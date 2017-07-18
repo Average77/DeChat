@@ -208,7 +208,7 @@ public class UserInfoActivity extends BaseActivity<UserInfoContact.UserInfoView,
 
     @Override
     public void successFriend(FriendBean friendBean) {
-        MyToast.getInstance().makeText( friendBean.getResult_message());
+        MyToast.getInstance().makeText(friendBean.getResult_message());
         if (friendBean.getResult_code() == 200) {
             userInfoFloating.setVisibility(View.GONE);
             userInfoMsg.setVisibility(View.VISIBLE);
@@ -256,5 +256,10 @@ public class UserInfoActivity extends BaseActivity<UserInfoContact.UserInfoView,
                 }
                 break;
         }
+    }
+
+    @OnClick(R.id.user_info_msg)
+    public void onViewClicked() {
+        toActivity(MessageActivity.class,null,0);
     }
 }

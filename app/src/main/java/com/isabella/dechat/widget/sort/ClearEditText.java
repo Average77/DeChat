@@ -16,11 +16,7 @@ import android.view.animation.TranslateAnimation;
 
 import com.isabella.dechat.R;
 
-/**
- * 带删除按钮的EditText
- * @author Angus
- *
- */
+
 public class ClearEditText extends AppCompatEditText implements
         OnFocusChangeListener, TextWatcher { 
 	/**

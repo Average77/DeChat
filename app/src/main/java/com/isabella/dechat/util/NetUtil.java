@@ -6,9 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 
-/**判断网络状态
- * Created by muhanxi on 17/4/10.
- */
+
 
 public class NetUtil {
 

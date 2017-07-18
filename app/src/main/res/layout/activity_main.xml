@@ -28,16 +28,20 @@
         android:paddingTop="5dp">
 
         <RadioButton
-            android:id="@+id/tabber_rb_message"
+            android:id="@+id/tabber_rb_recommend"
             style="@style/tabber_rb"
             android:checked="true"
-            android:drawableTop="@drawable/sl_tabber_friend"
+            android:drawableTop="@drawable/sl_tabber_recommend"
+            android:text="@string/recommend" />
+        <RadioButton
+            android:id="@+id/tabber_rb_message"
+            style="@style/tabber_rb"
+            android:drawableTop="@drawable/sl_tabber_message"
             android:text="@string/message" />
-
         <RadioButton
             android:id="@+id/tabber_rb_friend"
             style="@style/tabber_rb"
-            android:drawableTop="@drawable/sl_tabber_message"
+            android:drawableTop="@drawable/sl_tabber_friend"
             android:text="@string/friend" />
 
         <RadioButton

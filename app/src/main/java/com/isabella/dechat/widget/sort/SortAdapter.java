@@ -14,11 +14,7 @@ import com.isabella.dechat.R;
 import com.isabella.dechat.widget.sort.sortlist.SortModel;
 
 import java.util.List;
-/**
- * 用来处理集合中数据的显示与排序
- * @author Angus
- *
- */
+
 public class SortAdapter extends BaseAdapter implements SectionIndexer{
 	private List<SortModel> list = null;
 	private Context mContext;

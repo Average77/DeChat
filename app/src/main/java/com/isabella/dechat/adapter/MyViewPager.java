@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 
 /**
  * picshowdialog，重写viewpager，避免pointerIndex out of range异常
- * Created by xiaoke on 2016/5/20.
+ *
  */
 public class MyViewPager extends ViewPager {
     public MyViewPager(Context context) {

@@ -4,9 +4,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
 
-/**
- * Created by muhanxi on 17/6/22.
- */
+
 
 public class DeviceUtils {
 

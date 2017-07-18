@@ -13,9 +13,6 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * Created by muhanxi on 17/7/10.
- */
 
 public class MessageDaoUtils {
 

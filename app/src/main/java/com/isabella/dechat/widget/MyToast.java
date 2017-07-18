@@ -11,13 +11,16 @@ import com.isabella.dechat.base.IApplication;
 
 public class MyToast {
 
-    private  static Toast mToast;
-    private static TextView textView;
+    private   Toast mToast;
+    private  TextView textView;
     private static volatile MyToast myToast = null;
+    private View v;
 
     private MyToast() {
         mToast = new Toast(IApplication.getApplication());
-        mToast.setDuration(Toast.LENGTH_SHORT);;
+        mToast.setDuration(Toast.LENGTH_SHORT);
+       v = LayoutInflater.from(IApplication.getApplication()).inflate(R.layout.custom_toast, null);
+        textView = (TextView) v.findViewById(R.id.toast_message);
     }
 
     public static MyToast getInstance() {
@@ -30,26 +33,20 @@ public class MyToast {
         }
 
         return myToast;
-    }
-    private MyToast(CharSequence text) {
-        View v = LayoutInflater.from(IApplication.getApplication()).inflate(R.layout.custom_toast, null);
-        textView = (TextView) v.findViewById(R.id.toast_message);
-        textView.setText(text);
 
-        mToast.setView(v);
     }
+
 
 
     public  void makeText(CharSequence text) {
-        if(mToast == null){
-            new MyToast(text);
-        }else {
-            textView.setText(text);
-           // mToast.setDuration(duration);
-        }
+        textView.setText(text);
+        mToast = new Toast(IApplication.getApplication());
+        mToast.setDuration(Toast.LENGTH_SHORT);
+        mToast.setView(v);
         mToast.show();
 
     }
+
 
 
 }

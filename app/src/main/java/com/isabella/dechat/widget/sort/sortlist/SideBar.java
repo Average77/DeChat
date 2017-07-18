@@ -14,12 +14,7 @@ import android.widget.TextView;
 
 import com.isabella.dechat.R;
 
-/**
- * 右侧的sideBar,显示的是二十六个字母以及*，和#号，
- * 点击字母，自动导航到相应拼音的汉字上
- * @author Angus
- *
- */
+
 public class SideBar extends View {
 	// 触摸事件
 	private OnTouchingLetterChangedListener onTouchingLetterChangedListener;

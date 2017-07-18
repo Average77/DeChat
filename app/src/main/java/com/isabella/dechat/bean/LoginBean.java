@@ -1,8 +1,6 @@
 package com.isabella.dechat.bean;
 
-/**
- * Created by Administrator on 2017/6/16 0016.
- */
+
 
 public class LoginBean {
 
@@ -62,6 +60,7 @@ public class LoginBean {
         private String password;
         private double lat;
         private double lng;
+        private String yxpassword;
         private String imagePath;
 
         public String getImagepath() {
@@ -74,6 +73,14 @@ public class LoginBean {
 
         public double getLat() {
             return lat;
+        }
+
+        public String getYxpassword() {
+            return yxpassword;
+        }
+
+        public void setYxpassword(String yxpassword) {
+            this.yxpassword = yxpassword;
         }
 
         public void setLat(double lat) {

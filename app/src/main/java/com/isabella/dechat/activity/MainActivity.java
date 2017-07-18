@@ -24,6 +24,7 @@ import com.isabella.dechat.contact.LoginContact;
 import com.isabella.dechat.fragment.FreshFragment;
 import com.isabella.dechat.fragment.FriendFragment;
 import com.isabella.dechat.fragment.MessageFragment;
+import com.isabella.dechat.fragment.RecommendFragment;
 import com.isabella.dechat.fragment.MyFragment;
 import com.isabella.dechat.presenter.LoginPresenter;
 import com.isabella.dechat.util.PreferencesUtils;
@@ -79,26 +80,30 @@ public class MainActivity extends BaseActivity<LoginContact.LoginView,LoginPrese
 
                 switch (checkedId) {
 
-                    case R.id.tabber_rb_message:
+                    case R.id.tabber_rb_recommend:
                        dechat.setText("寻缘");
                         switchFragment(0);
                         InputType(group);
                         break;
-
-                    case R.id.tabber_rb_friend:
+                    case R.id.tabber_rb_message:
+                        dechat.setText("消息");
                         switchFragment(1);
+                        InputType(group);
+                        break;
+                    case R.id.tabber_rb_friend:
+                        switchFragment(2);
                         dechat.setText("好友");
                         InputType(group);
                         break;
 
                     case R.id.tabber_rb_fresh:
-                        switchFragment(2);
+                        switchFragment(3);
                         dechat.setText("新鲜事");
                         InputType(group);
                         break;
 
                     case R.id.tabber_rb_me:
-                        switchFragment(3);
+                        switchFragment(4);
                         dechat.setText("我的");
                         InputType(group);
                         break;
@@ -144,14 +149,17 @@ public class MainActivity extends BaseActivity<LoginContact.LoginView,LoginPrese
     }
     public void createFragment(Bundle savedInstanceState) {
 
+        RecommendFragment recommendFragment = (RecommendFragment) fragmentManager.findFragmentByTag("RecommendFragment");
         MessageFragment messageFragment = (MessageFragment) fragmentManager.findFragmentByTag("MessageFragment");
         FriendFragment friendFragment = (FriendFragment) fragmentManager.findFragmentByTag("FriendFragment");
         FreshFragment freshFragment = (FreshFragment) fragmentManager.findFragmentByTag("FreshFragment");
         MyFragment myFragment = (MyFragment) fragmentManager.findFragmentByTag("MyFragment");
+        if (recommendFragment == null) {
+            recommendFragment = new RecommendFragment();
+        }
         if (messageFragment == null) {
             messageFragment = new MessageFragment();
         }
-
         if (friendFragment == null) {
             friendFragment = new FriendFragment();
         }
@@ -163,6 +171,7 @@ public class MainActivity extends BaseActivity<LoginContact.LoginView,LoginPrese
             myFragment = new MyFragment();
         }
 
+        fragments.add(recommendFragment);
         fragments.add(messageFragment);
         fragments.add(friendFragment);
         fragments.add(freshFragment);

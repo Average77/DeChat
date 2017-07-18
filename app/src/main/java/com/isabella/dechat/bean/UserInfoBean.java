@@ -1,8 +1,6 @@
 package com.isabella.dechat.bean;
 
-/**
- * Created by Administrator on 2017/7/12.
- */
+
 
 public class UserInfoBean {
 

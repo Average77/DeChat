@@ -2,9 +2,7 @@ package com.isabella.dechat.cipher;
 
 import java.security.MessageDigest;
 
-/**
- * Created by muhanxi on 17/7/2.
- */
+
 
 public class Md5Utils {
 

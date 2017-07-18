@@ -125,7 +125,7 @@ public class MsgRecyViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
             viewHolder.intro.setText(mValues.get(position).getIntroduce());
-            GlideUtils.getInstance().haveCacheLarger(mValues.get(position).getImagePath(), viewHolder.iv, context);
+            GlideUtils.getInstance().havaRoundLetter(mValues.get(position).getImagePath(), viewHolder.iv, context);
             //判断是否设置了监听器
             if(mOnItemClickListener != null){
                 //为ItemView设置监听器

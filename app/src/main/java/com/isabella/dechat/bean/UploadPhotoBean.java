@@ -1,8 +1,5 @@
 package com.isabella.dechat.bean;
 
-/**
- * Created by muhanxi on 17/7/6.
- */
 
 public class UploadPhotoBean {
 

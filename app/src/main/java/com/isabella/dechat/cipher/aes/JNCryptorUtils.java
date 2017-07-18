@@ -6,9 +6,7 @@ import android.text.TextUtils;
 import com.isabella.dechat.cipher.Base64;
 
 
-/**
- * Created by hongjiang on 16/5/9.
- */
+
 public class JNCryptorUtils {
 
     public static JNCryptorUtils jnCryptorUtils ;

@@ -11,11 +11,7 @@ import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.Cipher;
  
-/**
- * @author alun (http://alunblog.duapp.com)
- * @version 1.0
- * @created 2013-5-17
- */
+
 public class Rsa {
 
     private static final String RSA_PUBLICE = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDVGd/g8HD6e/L7+AKYP/RW/7aQz0YVlQ4xrQGnEbMoH5j0BcKhGiw+NbnCMFs6allgwegbGbKqcH+5ooOotgwqY2vAln0PCDExpVjtaxVSeLZchDSM3U40Qx3NeLlGTtiARFU3U2IGgun9EVA79LlvVpqvsl7z/tGtFMP+TWkR3wIDAQAB";

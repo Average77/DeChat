@@ -1,8 +1,6 @@
 package com.isabella.dechat.cipher;
 
-/**
- * Created by hongjiang on 16/5/4.
- */
+
 public class DataConvertUtils {
 
     public static String parseByte2HexStr(byte buf[]) {

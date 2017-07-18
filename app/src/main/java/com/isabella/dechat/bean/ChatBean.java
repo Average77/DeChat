@@ -1,8 +1,6 @@
 package com.isabella.dechat.bean;
 
-/**
- * Created by Administrator on 2017/6/16 0016.
- */
+
 
 public class ChatBean {
 
