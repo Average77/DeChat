@@ -57,7 +57,14 @@ public class LoginModerImlp implements LoginContact.LoginModel {
                 System.out.println("result = " + result);
                 LoginBean loginBean = GsonUtil.getInstance().fromJson(result, LoginBean.class);
 
+                PreferencesUtils.addConfigInfo(IApplication.getApplication(),"isLogin",true);
+                AppManager.getAppManager().finishActivity(SplashActivity.class);
+                PreferencesUtils.addConfigInfo(IApplication.getApplication(), "nickname", loginBean.getData().getNickname());
+                PreferencesUtils.addConfigInfo(IApplication.getApplication(), "imagepath", loginBean.getData().getImagepath());
+                PreferencesUtils.addConfigInfo(IApplication.getApplication(), "userId", loginBean.getData().getUserId());
+                PreferencesUtils.addConfigInfo(IApplication.getApplication(), "phone", loginBean.getData().getPhone());
 
+                PreferencesUtils.addConfigInfo(IApplication.getApplication(), "isLogin", true);
                 if (loginBean.getResult_code()==200){
                     EMClient.getInstance().login(loginBean.getData().getUserId()+"",loginBean.getData().getYxpassword(),new EMCallBack() {//回调
                         @Override
@@ -78,16 +85,10 @@ public class LoginModerImlp implements LoginContact.LoginModel {
                         }
                     });
                     //  if (PreferencesUtils.getValueByKey(IApplication.getApplication(),"isToLogin",true)) {
-                    loginModelImplResult.success(loginBean);
-                    //   }
-                    PreferencesUtils.addConfigInfo(IApplication.getApplication(),"isLogin",true);
-                    AppManager.getAppManager().finishActivity(SplashActivity.class);
-                    PreferencesUtils.addConfigInfo(IApplication.getApplication(), "nickname", loginBean.getData().getNickname());
-                    PreferencesUtils.addConfigInfo(IApplication.getApplication(), "imagepath", loginBean.getData().getImagepath());
-                    PreferencesUtils.addConfigInfo(IApplication.getApplication(), "userId", loginBean.getData().getUserId());
-                    PreferencesUtils.addConfigInfo(IApplication.getApplication(), "phone", loginBean.getData().getPhone());
 
-                    PreferencesUtils.addConfigInfo(IApplication.getApplication(), "isLogin", true);
+                    //   }
+
+                    loginModelImplResult.success(loginBean);
 
                 }else{
                     PreferencesUtils.addConfigInfo(IApplication.getApplication(),"isLogin",false);

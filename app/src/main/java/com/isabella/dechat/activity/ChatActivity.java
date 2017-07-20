@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -17,7 +19,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hyphenate.EMCallBack;
@@ -25,7 +26,7 @@ import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.isabella.dechat.R;
-import com.isabella.dechat.adapter.ChatAdapter;
+import com.isabella.dechat.adapter.ChatMsgAdapter;
 import com.isabella.dechat.base.IActivity;
 import com.isabella.dechat.bean.EaseEmojicon;
 import com.isabella.dechat.bean.EaseEmojiconGroupEntity;
@@ -52,8 +53,8 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
     TextView chatUsername;
     @BindView(R.id.chat_user_info)
     ImageView chatUserInfo;
-    @BindView(R.id.chat_listview)
-    ListView chatListview;
+    //    @BindView(R.id.chat_listview)
+//    ListView chatListview;
     @BindView(R.id.chat_voice)
     CheckBox chatVoice;
     @BindView(R.id.chat_et)
@@ -69,7 +70,9 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
     EaseEmojiconMenuBase emojiconMenu;
     @BindView(R.id.buttom_layout_view)
     LinearLayout buttomLayoutView;
-    private ChatAdapter adapter;
+    @BindView(R.id.chat_recycler)
+    RecyclerView chatRecycler;
+    private ChatMsgAdapter adapter;
 
     private List<EaseEmojiconGroupEntity> emojiconGroupList = new ArrayList<>();
     Handler handler = new Handler() {
@@ -80,7 +83,8 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
             switch (msg.what) {
                 case 0:
                     adapter.notifyDataSetChanged();
-                    chatListview.setSelection(chatListview.getBottom());
+                    //chatRecycler.setSelection(chatRecycler.getBottom());
+                    chatRecycler.scrollToPosition(adapter.getItemCount()-1);
                     break;
             }
         }
@@ -98,8 +102,11 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
 
         list = new ArrayList<>();
         buttomLayoutView.setTag(2);
-        adapter = new ChatAdapter(this, list);
-        chatListview.setAdapter(adapter);
+        adapter = new ChatMsgAdapter(this, list);
+        chatRecycler.setAdapter(adapter);
+        LinearLayoutManager  linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+       // linearLayoutManager.setStackFromEnd(true);
+        chatRecycler.setLayoutManager(linearLayoutManager);
         initEmoje(null);
         initLisitener();
 
@@ -380,7 +387,8 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
         });
         list.add(emMessage);
         adapter.notifyDataSetChanged();
-        chatListview.setSelection(chatListview.getBottom());
+     //   chatListview.setSelection(chatListview.getBottom());
+        chatRecycler.scrollToPosition(adapter.getItemCount()-1);
 
     }
 
@@ -404,6 +412,7 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
                 //    Log.d("ChatAdapter", "integer:" + integer);
                 //  Log.d("ChatAdapter", "chatId:" + chatId);
                 // if (integer==chatId) {
+
                 list.addAll(messages);
                 handler.sendEmptyMessage(0);
                 // }

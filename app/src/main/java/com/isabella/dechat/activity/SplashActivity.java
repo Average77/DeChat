@@ -64,6 +64,7 @@ public class SplashActivity extends IActivity {
 
         }
     };
+    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,7 +154,7 @@ public class SplashActivity extends IActivity {
     private void getLocation(Context context) {
 
         //1.获取位置管理器
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         //2.获取位置提供器，GPS或是NetWork
         List<String> providers = locationManager.getProviders(true);
         if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
@@ -213,4 +214,14 @@ public class SplashActivity extends IActivity {
         }
     };
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (locationManager!=null){
+            locationManager=null;
+        }
+        if (mListener!=null){
+            mListener=null;
+        }
+    }
 }

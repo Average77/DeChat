@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.isabella.dechat.R;
+import com.isabella.dechat.activity.ChatActivity;
 import com.isabella.dechat.activity.MainActivity;
 import com.isabella.dechat.activity.SplashActivity;
 import com.isabella.dechat.base.AppManager;
@@ -26,7 +27,6 @@ import com.isabella.dechat.bean.FriendListDataBean;
 import com.isabella.dechat.contact.FriendContact;
 import com.isabella.dechat.presenter.FriendPresenter;
 import com.isabella.dechat.util.PreferencesUtils;
-import com.isabella.dechat.widget.MyToast;
 import com.isabella.dechat.widget.sort.ClearEditText;
 import com.isabella.dechat.widget.sort.PinyinComparator;
 import com.isabella.dechat.widget.sort.SortAdapter;
@@ -132,7 +132,11 @@ public class FriendFragment extends BaseFragment<FriendContact.FriendView, Frien
                 // 这里要利用adapter.getItem(position)来获取当前position所对应的对象
                 // Toast.makeText(getApplication(),
                 SortModel item = (SortModel) adapter.getItem(position);
-                MyToast.getInstance().makeText(item.getName());
+                PreferencesUtils.addConfigInfo(IApplication.getApplication(), "chatId", item.getUserId());
+                PreferencesUtils.addConfigInfo(IApplication.getApplication(), "chatPath", item.getUrl());
+                PreferencesUtils.addConfigInfo(IApplication.getApplication(), "chatUserName", item.getName());
+                toActivity(ChatActivity.class,null,0);
+               // MyToast.getInstance().makeText(item.getName());
             }
         });
 
