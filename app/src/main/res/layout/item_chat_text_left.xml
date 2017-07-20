@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:padding="10dp"
+    android:layout_height="wrap_content">
+    <ImageView
+
+        android:src="@drawable/ic_album_default"
+        android:id="@+id/text_left_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        />
+    <TextView
+        android:id="@+id/text_left_image_text"
+        android:layout_marginRight="20dp"
+        android:textSize="17sp"
+        android:textColor="@color/toast_color"
+        android:background="@drawable/message_chat_list_item_receive_bg_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>

@@ -18,8 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.isabella.dechat.R;
-import com.isabella.dechat.base.AppManager;
 import com.isabella.dechat.base.BaseActivity;
+import com.isabella.dechat.base.IApplication;
 import com.isabella.dechat.bean.LoginBean;
 import com.isabella.dechat.contact.LoginContact;
 import com.isabella.dechat.presenter.LoginPresenter;
@@ -191,14 +191,7 @@ public class LoginActivity extends BaseActivity<LoginContact.LoginView, LoginPre
     public void success(LoginBean loginBean) {
         if (loginBean.getResult_code() == 200) {
 
-            AppManager.getAppManager().finishActivity(SplashActivity.class);
-            PreferencesUtils.addConfigInfo(this, "nickname", loginBean.getData().getNickname());
-            PreferencesUtils.addConfigInfo(this, "imagepath", loginBean.getData().getImagepath());
-            PreferencesUtils.addConfigInfo(this, "userId", loginBean.getData().getUserId());
-            PreferencesUtils.addConfigInfo(this, "phone", loginBean.getData().getPhone());
-            PreferencesUtils.addConfigInfo(this, "password", loginPassword.getText().toString());
-            Log.d("LoginActivity", "loginBean.getData().getUserId():" + loginBean.getData().getUserId());
-            PreferencesUtils.addConfigInfo(this, "isLogin", true);
+            PreferencesUtils.addConfigInfo(IApplication.getApplication(), "password", loginPassword.getText().toString());
             toActivity(MainActivity.class, null, 0);
             finish();
         } else {

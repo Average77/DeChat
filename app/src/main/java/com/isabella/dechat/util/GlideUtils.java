@@ -77,6 +77,14 @@ public class GlideUtils {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(view);
     }
+    public void havaHeadRound(String url, ImageView view, Context context){
+        Glide.with(context).load(url)
+                .placeholder(R.drawable.woman_user_round_icon_default)
+                .error(R.drawable.woman_user_round_icon_default)
+                .transform(new CenterCrop(context),new GlideRound(context,25))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(view);
+    }
     //把本地bitmap设置成圆角
     public void bitmapRound(Bitmap bitmap,Context context,ImageView imageView){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

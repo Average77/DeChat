@@ -63,12 +63,13 @@ public class FriendModerImlp implements FriendContact.FriendModel{
         RetrofitManager.post("http://qhb.2dyt.com/MyInterface/userAction_selectAllUserAndFriend.action", map, new BaseObserver() {
             @Override
             public void onSuccess(String result) {
-                System.out.println("111result = " + result);
+                System.out.println("result = " + result);
+                if (result!=null||!"".equals("")){
                 FriendListBean friendListBean = GsonUtil.getInstance().fromJson(result, FriendListBean.class);
-                if (friendListBean.getResult_code()==200){
+               if (friendListBean.getResult_code()==200) {
                     final List<FriendListDataBean> date = friendListBean.getData();
                     KLog.w(date);
-                    friendModelImplResult.success(date,false);
+                    friendModelImplResult.success(date, false);
                     Observable.create(new ObservableOnSubscribe<Long>() {
                         @Override
                         public void subscribe(@NonNull ObservableEmitter<Long> e) throws Exception {
@@ -87,6 +88,7 @@ public class FriendModerImlp implements FriendContact.FriendModel{
 
                                 }
                             });
+                }
                 }
 
 

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.isabella.dechat.R;
 import com.isabella.dechat.adapter.UserInfoRecyAdapter;
 import com.isabella.dechat.base.BaseActivity;
+import com.isabella.dechat.base.IApplication;
 import com.isabella.dechat.bean.FriendBean;
 import com.isabella.dechat.bean.PhotolistBean;
 import com.isabella.dechat.contact.UserInfoContact;
@@ -79,6 +80,8 @@ public class UserInfoActivity extends BaseActivity<UserInfoContact.UserInfoView,
     private AlertDialog.Builder dialogLogin;
     private int userId;
     private AlertDialog.Builder dialogAddFriend;
+    private String imagePath;
+    private String nickname;
 
     @Override
     public UserInfoPresenter initPresenter() {
@@ -103,15 +106,16 @@ public class UserInfoActivity extends BaseActivity<UserInfoContact.UserInfoView,
         // Bundle bundle = intent.getExtras();
         // NearbyDataBean nearbyDataBean= (NearbyDataBean) bundle.getSerializable("userInfo");
         userId = intent.getIntExtra("userId", 0);
+        PreferencesUtils.addConfigInfo(IApplication.getApplication(), "chatId", userId);
         //int userId = nearbyDataBean.getUserId();
         int picWidth = intent.getIntExtra("picWidth", 100);
         int picHeight = intent.getIntExtra("picHeight", 100);
         int age = intent.getIntExtra("age", 18);
-        String nickname = intent.getStringExtra("nickname");
+        nickname = intent.getStringExtra("nickname");
         String gender = intent.getStringExtra("sex");
         String address = intent.getStringExtra("address");
         String intro = intent.getStringExtra("intro");
-        String imagePath = intent.getStringExtra("imagePath");
+        imagePath = intent.getStringExtra("imagePath");
         long lasttime = intent.getLongExtra("lasttime", System.currentTimeMillis());
         presenter.getData(userId);
         collapsingToolbarLayout.setTitle(nickname);
@@ -260,6 +264,9 @@ public class UserInfoActivity extends BaseActivity<UserInfoContact.UserInfoView,
 
     @OnClick(R.id.user_info_msg)
     public void onViewClicked() {
-        toActivity(MessageActivity.class,null,0);
+       // PreferencesUtils.addConfigInfo(IApplication.getApplication(), "userId", imagePath);
+        PreferencesUtils.addConfigInfo(IApplication.getApplication(), "chatPath", imagePath);
+        PreferencesUtils.addConfigInfo(IApplication.getApplication(), "chatUserName", nickname);
+        toActivity(ChatActivity.class,null,0);
     }
 }
