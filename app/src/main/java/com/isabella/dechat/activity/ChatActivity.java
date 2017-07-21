@@ -4,12 +4,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.isabella.dechat.R;
 import com.isabella.dechat.adapter.ChatMsgAdapter;
@@ -39,6 +42,8 @@ import com.isabella.dechat.widget.emojicon.EaseEmojiconMenuBase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -53,8 +58,6 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
     TextView chatUsername;
     @BindView(R.id.chat_user_info)
     ImageView chatUserInfo;
-    //    @BindView(R.id.chat_listview)
-//    ListView chatListview;
     @BindView(R.id.chat_voice)
     CheckBox chatVoice;
     @BindView(R.id.chat_et)
@@ -72,6 +75,8 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
     LinearLayout buttomLayoutView;
     @BindView(R.id.chat_recycler)
     RecyclerView chatRecycler;
+    @BindView(R.id.chat_swipe)
+    SwipeRefreshLayout chatSwipe;
     private ChatMsgAdapter adapter;
 
     private List<EaseEmojiconGroupEntity> emojiconGroupList = new ArrayList<>();
@@ -84,7 +89,7 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
                 case 0:
                     adapter.notifyDataSetChanged();
                     //chatRecycler.setSelection(chatRecycler.getBottom());
-                    chatRecycler.scrollToPosition(adapter.getItemCount()-1);
+                    chatRecycler.scrollToPosition(adapter.getItemCount() - 1);
                     break;
             }
         }
@@ -93,6 +98,7 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
     private List<EMMessage> list;
     private int kh;
     private int chatId;
+    private EMConversation conversation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,15 +108,75 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
 
         list = new ArrayList<>();
         buttomLayoutView.setTag(2);
-        adapter = new ChatMsgAdapter(this, list);
-        chatRecycler.setAdapter(adapter);
-        LinearLayoutManager  linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-       // linearLayoutManager.setStackFromEnd(true);
+        chatSwipe.setProgressBackgroundColorSchemeResource(android.R.color.white);
+        chatSwipe.setColorSchemeResources(android.R.color.holo_blue_light,
+                android.R.color.holo_red_light,android.R.color.holo_orange_light,
+                android.R.color.holo_green_light);
+        chatSwipe.setProgressViewOffset(false, 0, (int) TypedValue
+                .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources()
+                        .getDisplayMetrics()));
+        chatSwipe.setRefreshing(false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        // linearLayoutManager.setStackFromEnd(true);
         chatRecycler.setLayoutManager(linearLayoutManager);
         initEmoje(null);
         initLisitener();
+        chatId = PreferencesUtils.getValueByKey(this, "chatId", 1);
+        conversation = EMClient.getInstance().chatManager().getConversation(chatId + "");
+        if (conversation != null) {
+            if (list.size()>0){
+                List<EMMessage> messages = conversation.loadMoreMsgFromDB(list.get(list.size()-1).getMsgId(), 20);
+                list.addAll(messages);
+            }
+
+        }
+        //获取此会话的所有消息
+        if (conversation != null) {
+            List<EMMessage> messages = conversation.getAllMessages();
+            list.addAll(messages);
+        }
+
+        //SDK初始化加载的聊天记录为20条，到顶时需要去DB里获取更多
+        //获取startMsgId之前的pagesize条消息，此方法获取的messages SDK会自动存入到此会话中，APP中无需再次把获取到的messages添加到会话中
+        //  List<EMMessage> messages = conversation.loadMoreMsgFromDB(startMsgId, pagesize);
+
+        adapter = new ChatMsgAdapter(this, list);
+        chatRecycler.setAdapter(adapter);
+        if (list.size()>0){
+            chatRecycler.scrollToPosition(adapter.getItemCount() - 1);
+        }
+        chatSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                chatSwipe.setRefreshing(true);
+                if (conversation != null) {
+                   if (list.size()>0){
+                       conversation.getAllMsgCount();
+                       List<EMMessage> messages = conversation.loadMoreMsgFromDB(list.get(0).getMsgId(), 20);
+                       list.addAll(messages);
+                       Collections.sort(list, new Comparator<EMMessage>() {
+                           @Override
+                           public int compare(EMMessage o1, EMMessage o2) {
+                               return (int)(o1.getMsgTime()-o2.getMsgTime());
+                           }
+                       });
+                       chatSwipe.setRefreshing(false);
+                       adapter.notifyDataSetChanged();
+                   }
+
+                }else{
+                    chatSwipe.setRefreshing(false);
+                }
 
 
+            }
+        });
+        chatRecycler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hidenKeyBoard(chatEt);
+            }
+        });
         KeyBoardHelper keyBoardHelper = new KeyBoardHelper(this);
         keyBoardHelper.onCreate();
         keyBoardHelper.setOnKeyBoardStatusChangeListener(this);
@@ -124,6 +190,7 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
         //  LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) emojiconMenu.getLayoutParams();
         params.height = keyHeight;
         buttomLayoutView.setLayoutParams(params);
+
         chatEt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,11 +199,14 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
                     chatPlus.setChecked(false);
                     setKeyBoardModelPan();
                 } else {
-                    setKeyBoardModelResize();
+                    if (((int) buttomLayoutView.getTag()) == 1) {
+                        setKeyBoardModelPan();
+                    } else {
+                        setKeyBoardModelResize();
+                    }
                 }
             }
         });
-
         chatEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -161,6 +231,12 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
             @Override
             public void onClick(View v) {
                 setKeyBoardModelPan();
+                if (!((CheckBox) v).isChecked()) {
+                    //  显示键盘
+                    showKeyBoard(chatEt);
+                    //  buttomLayoutView.setVisibility(View.GONE);
+
+                }
                 if (chatVoice.isChecked()) {
                     chatVoice.setChecked(false);
                     chatBt.setVisibility(View.GONE);
@@ -174,12 +250,8 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
                     buttomLayoutView.setTag(1);
                     chatPlus.setChecked(false);
                     hidenKeyBoard(chatEt);
-                } else {
-                    //  显示键盘
-                    showKeyBoard(chatEt);
-                    //  buttomLayoutView.setVisibility(View.GONE);
-
                 }
+
             }
         });
         chatPlus.setOnClickListener(new View.OnClickListener() {
@@ -230,6 +302,8 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
             if (emojiconGroupList == null) {
                 emojiconGroupList = new ArrayList<>();
                 emojiconGroupList.add(new EaseEmojiconGroupEntity(R.mipmap.emoji_1, Arrays.asList(EaseDefaultEmojiconDatas.getData())));
+                emojiconGroupList.add(new EaseEmojiconGroupEntity(R.mipmap.emoji_36, Arrays.asList(EaseDefaultEmojiconDatas.getDataTwo())));
+                emojiconGroupList.add(new EaseEmojiconGroupEntity(R.mipmap.emoji_53, Arrays.asList(EaseDefaultEmojiconDatas.getDataThree())));
             }
             ((EaseEmojiconMenu) emojiconMenu).init(emojiconGroupList);
         }
@@ -257,28 +331,7 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
                 }
             }
         });
-//        chatEt.setOnKeyListener(new View.OnKeyListener() {
-//            @Override
-//            public boolean onKey(View v, int keyCode, KeyEvent event) {
-//                if (keyCode == KeyEvent.KEYCODE_BACK ) {
-//                    setKeyBoardModelResize();
-//                    //键盘
-//                    activityChatTwo.setTag(1);
-//                    activityChatView.setVisibility(View.GONE);
-//                    activityChatTwo.setBackgroundResource(R.drawable.ease_chatting_setmode_xiaolian_btn);
-//
-//                    hidenKeyBoard();
-//                    if (keyBoardheight ==0 && activityChatView.getVisibility() == View.GONE){
-//                        return  false;
-//                    }
-//                }
-//                if (keyCode == KeyEvent.KEYCODE_DEL){
-//                    return false;
-//                }
-//
-//                return true;
-//            }
-//        });
+
     }
 
     @Override
@@ -364,7 +417,7 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
     public void setTextMessage() {
         // int userId = PreferencesUtils.getValueByKey(this, "userId", 1);
 
-        chatId = PreferencesUtils.getValueByKey(this, "chatId", 1);
+
         Log.d("ChatActivity", "chatId:" + chatId);
         EMMessage emMessage = EMMessage.createTxtSendMessage(chatEt.getText().toString(), chatId + "");
         EMClient.getInstance().chatManager().sendMessage(emMessage);
@@ -387,8 +440,8 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
         });
         list.add(emMessage);
         adapter.notifyDataSetChanged();
-     //   chatListview.setSelection(chatListview.getBottom());
-        chatRecycler.scrollToPosition(adapter.getItemCount()-1);
+        //   chatListview.setSelection(chatListview.getBottom());
+        chatRecycler.scrollToPosition(adapter.getItemCount() - 1);
 
     }
 
@@ -405,18 +458,16 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
             public void onMessageReceived(List<EMMessage> messages) {
                 //收到消息
                 System.out.println("onMessageReceived messages = " + messages);
-                //  if (Integer.parseInt(messages.get(0).getFrom())==chatId){
-                //if (messages.size()!=0&&messages!=null){
-                //  int integer = Integer.valueOf(list.get(0).getFrom());
-                //  int chatId = PreferencesUtils.getValueByKey(IApplication.getApplication(), "chatId", 1);
-                //    Log.d("ChatAdapter", "integer:" + integer);
-                //  Log.d("ChatAdapter", "chatId:" + chatId);
-                // if (integer==chatId) {
+              if (messages!=null&&messages.size()!=0){
+                  Log.d("ChatActivity", "messages.size():" + messages.size());
+                  if (messages.get(0).getFrom().equals(chatId+"")){
+                      list.addAll(messages);
+                      handler.sendEmptyMessage(0);
+                  }
+              }
 
-                list.addAll(messages);
-                handler.sendEmptyMessage(0);
-                // }
-                // }
+
+
 
             }
 

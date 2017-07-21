@@ -82,6 +82,43 @@ public class EaseSmileUtils {
 	public static final String ee_46 = "[(#m)]";
 	public static final String ee_47 = "[(#n)]";
 	public static final String ee_48 = "[(#v)]";
+	public static final String ee_49 = "[(#w)]";
+	public static final String ee_50 = "[(#b)]";
+	public static final String ee_51 = "[(#c)]";
+	public static final String ee_52 = "[(#a)]";
+	public static final String ee_53 = "[(#s)]";
+	public static final String ee_54 = "[(#z)]";
+	public static final String ee_55 = "[(#o)]";
+	public static final String ee_56 = "[(-q)]";
+	public static final String ee_57 = "[(-w)]";
+	public static final String ee_58 = "[(-e)]";
+	public static final String ee_59 = "[(-r)]";
+	public static final String ee_60 = "[(-t)]";
+	public static final String ee_61 = "[(-y)]";
+	public static final String ee_62 = "[(-u)]";
+	public static final String ee_63 = "[(-i)]";
+	public static final String ee_64 = "[(-o)]";
+	public static final String ee_65 = "[(-p)]";
+	public static final String ee_66 = "[(-{)]";
+	public static final String ee_67 = "[(-})]";
+	public static final String ee_68 = "[(-a)]";
+	public static final String ee_69 = "[(-s)]";
+	public static final String ee_70 = "[(-d)]";
+	public static final String ee_71 = "[(-f)]";
+	public static final String ee_72 = "[(-g)]";
+	public static final String ee_73 = "[(-h)]";
+	public static final String ee_74 = "[(-j)]";
+	public static final String ee_75 = "[(-k)]";
+	public static final String ee_76 = "[(-l)]";
+	public static final String ee_77 = "[(-;)]";
+	public static final String ee_78 = "[(-')]";
+	public static final String ee_79 = "[(-z)]";
+	public static final String ee_80 = "[(-x)]";
+	public static final String ee_81 = "[(-c)]";
+	public static final String ee_82 = "[(-v)]";
+	public static final String ee_83 = "[(-b)]";
+	public static final String ee_84 = "[(-n)]";
+
 
 	private static final Factory spannableFactory = Factory
 	        .getInstance();
@@ -91,7 +128,15 @@ public class EaseSmileUtils {
 
 	static {
 	    EaseEmojicon[] emojicons = EaseDefaultEmojiconDatas.getData();
+		EaseEmojicon[] emojiconsTwo = EaseDefaultEmojiconDatas.getDataTwo();
+		EaseEmojicon[] emojiconsThree = EaseDefaultEmojiconDatas.getDataThree();
 		for (EaseEmojicon emojicon : emojicons) {
+			addPattern(emojicon.getEmojiText(), emojicon.getIcon());
+		}
+		for (EaseEmojicon emojicon : emojiconsTwo) {
+			addPattern(emojicon.getEmojiText(), emojicon.getIcon());
+		}
+		for (EaseEmojicon emojicon : emojiconsThree) {
 			addPattern(emojicon.getEmojiText(), emojicon.getIcon());
 		}
 	    EaseUI.EaseEmojiconInfoProvider emojiconInfoProvider = EaseUI.getInstance().getEmojiconInfoProvider();

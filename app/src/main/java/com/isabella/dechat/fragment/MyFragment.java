@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.isabella.dechat.R;
 import com.isabella.dechat.activity.MainActivity;
 import com.isabella.dechat.activity.SplashActivity;
@@ -55,6 +57,26 @@ public class MyFragment extends IFragment {
     @OnClick(R.id.me_exit_login)
     public void onViewClicked() {
         PreferencesUtils.addConfigInfo(getActivity(),"isLogin",false);
+        EMClient.getInstance().logout(true, new EMCallBack() {
+
+            @Override
+            public void onSuccess() {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onError(int code, String message) {
+                // TODO Auto-generated method stub
+
+            }
+        });
         MyToast.getInstance().makeText("退出登录成功!");
         new CookiesManager(IApplication.application).removeAllCookie();
         IApplication.setIsStart(true);

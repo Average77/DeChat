@@ -38,14 +38,19 @@
             android:alpha="0.9"
            android:background="@mipmap/ic_user" />
     </RelativeLayout>
-
-    <android.support.v7.widget.RecyclerView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/chat_swipe"
         android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <android.support.v7.widget.RecyclerView
+
         android:background="@color/chat_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/chat_recycler"
         />
+    </android.support.v4.widget.SwipeRefreshLayout>
     <!--<ListView-->
         <!--android:layout_weight="1"-->
         <!--android:background="@color/chat_background"-->
