@@ -83,7 +83,6 @@ public class LoginModerImlp implements LoginContact.LoginModel {
                     //   }
 
                     loginModelImplResult.success(loginBean);
-                    PreferencesUtils.addConfigInfo(IApplication.getApplication(),"isLogin",true);
                     AppManager.getAppManager().finishActivity(SplashActivity.class);
                     PreferencesUtils.addConfigInfo(IApplication.getApplication(), "nickname", loginBean.getData().getNickname());
                     PreferencesUtils.addConfigInfo(IApplication.getApplication(), "imagepath", loginBean.getData().getImagepath());

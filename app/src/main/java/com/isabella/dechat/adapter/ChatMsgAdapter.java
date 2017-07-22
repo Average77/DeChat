@@ -1,6 +1,9 @@
 package com.isabella.dechat.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMVoiceMessageBody;
 import com.isabella.dechat.R;
+import com.isabella.dechat.speex.SpeexPlayer;
 import com.isabella.dechat.util.EaseSmileUtils;
 import com.isabella.dechat.util.GlideUtils;
 import com.isabella.dechat.util.PreferencesUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import butterknife.BindView;
@@ -25,6 +31,17 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     LayoutInflater inflater;
     Context context;
     private List<EMMessage> list;
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private AnimationDrawable drawable;
+    private Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+        }
+    };
+    private AnimationDrawable drawable1;
+    private String chatPath;
+    private String imagepath;
 
     public ChatMsgAdapter(Context context, List<EMMessage> list) {
         this.context = context;
@@ -55,11 +72,10 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public int getItemViewType(int position) {
 
         if (list.get(position).getType() == EMMessage.Type.TXT) {
-            if (list.get(position).direct() == EMMessage.Direct.RECEIVE) {
-                return 1;
-            } else {
-                return 0;
-            }
+            return list.get(position).direct() == EMMessage.Direct.RECEIVE ? 1 : 0;
+        }
+        if (list.get(position).getType() == EMMessage.Type.VOICE) {
+            return list.get(position).direct() == EMMessage.Direct.RECEIVE ? 3 : 2;
         }
 
 
@@ -75,27 +91,46 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             //将创建的View注册点击事件
 
             return new ViewHolderRight(view);
-        } else  {
+        } else if (viewType==1){
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_chat_text_left, parent, false);
             //将创建的View注册点击事件
 
             return new ViewHolderLeft(view);
+        }else if (viewType==2){
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_chat_voice_right, parent, false);
+            return new ViewHolderVoiceRight(view);
+        }else {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_chat_voice_left, parent, false);
+            //将创建的View注册点击事件
+            return new ViewHolderVoiceLeft(view);
         }
 
     }
 
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         String s = list.get(position).getBody().toString();
         String substring = s.substring(5, s.length() - 1);
+        chatPath = PreferencesUtils.getValueByKey(context, "chatPath", "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1439559070,3076958386&fm=26&gp=0.jpg");
+        imagepath = PreferencesUtils.getValueByKey(context, "imagepath", "http://www.baidu.com/link?url=Yq6CQfjf2oSythhjkP5AmxUc3RrsbPwML7oLtkIzP8iVXdBf0QR3I_pmTftlOVueZrO8yn4KpkWoKtCXS7hUzTayldCtZskPjza9xZfMotbdsDBW6FoDYkCtYb09OLzVuAsgNBas6p-6HUyfL0OK1kmDYWEb6Qr9hu0vRnA_x0Hv6Iity0S7FMcH2IEzgd69crhc1NRoRuvWVGSNXzxIcgarf0sLVVDuxKT8L0b-2fLTiLESDDsDszdx7nO6M2L2wvXbdlcwg0HAW4Ptd_G9FhuygFUdCSng40cQ4hPB3KLkZ0bvhl6WFdKO_b6QaDo8f85ZlkuLEhwe8QQH-QfF38VYNuybcrKTODQJVu3CsPaj2W9Z-tVg7AUIiqHSByF4MhYn64nPxJel3GhVRQ3PTSfTScLghss0KZjWEfs0T-65hoLqZB7NffKzoj62jgnLNTML9QaQGP8cOVwz5yXq3wZG7pvv-YeeYXh8AQUUEXaihQwuytMGSGn5lOkV1NAq87RzU6pBb-wfOOiQ-MI5JS2Fp9fjWcHU9Jvs0CL_2TiXj8lVwl2WrJNmLBvw_25YOs-yff3wPgrCAEGxZDTAWsFTi8hTqgl4k8cnkfWaTnq&wd=&eqid=c9e3d59100006023000000025972b950");
+
         if (holder instanceof ViewHolderRight) {
             final ViewHolderRight viewHolderRight = (ViewHolderRight) holder;
-            Boolean isSetPhoto = PreferencesUtils.getValueByKey(context, "isSetPhoto", false);
-            if (isSetPhoto) {
-                GlideUtils.getInstance().havaHeadRound(PreferencesUtils.getValueByKey(context, "imagepath", ""), viewHolderRight.textRightImage, context);
-            }
+                GlideUtils.getInstance().havaHeadRound(imagepath, viewHolderRight.textRightImage, context);
+//            Boolean chatError = PreferencesUtils.getValueByKey(context, "chatError", false);
+//            if (chatError){
+//                if (viewHolderRight.chatError.getVisibility()!=View.VISIBLE){
+//                    viewHolderRight.chatError.setVisibility(View.VISIBLE);
+//                }
+//            }else{
+//                if (viewHolderRight.chatError.getVisibility()!=View.GONE){
+//                    viewHolderRight.chatError.setVisibility(View.GONE);
+//                }
+//            }
             viewHolderRight.textRightImageText.setText(EaseSmileUtils.getSmiledText(context, substring));
             if (mOnItemClickListener != null) {
                 //为ItemView设置监听器
@@ -118,9 +153,10 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     }
                 });
             }
-        }else if (holder instanceof ViewHolderLeft){
+            getData(position, viewHolderRight.chatRightTime);
+        } else if (holder instanceof ViewHolderLeft) {
             final ViewHolderLeft viewHolderLeft = (ViewHolderLeft) holder;
-            GlideUtils.getInstance().havaHeadRound(PreferencesUtils.getValueByKey(context, "chatPath", ""), viewHolderLeft.textLeftImage, context);
+            GlideUtils.getInstance().havaHeadRound(chatPath, viewHolderLeft.textLeftImage, context);
 
             viewHolderLeft.textLeftImageText.setText(EaseSmileUtils.getSmiledText(context, substring));
             if (mOnItemClickListener != null) {
@@ -143,9 +179,73 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         return true;
                     }
                 });
+                getData(position, viewHolderLeft.chatLeftTime);
             }
+        }else if (holder instanceof ViewHolderVoiceRight){
+            final ViewHolderVoiceRight right = (ViewHolderVoiceRight) holder;
+                GlideUtils.getInstance().havaHeadRound(imagepath, right.head, context);
+
+            getData(position, right.chatRightTime);
+            drawable = (AnimationDrawable) context.getResources().getDrawable(R.drawable.anim_voice_send);
+            //imageView.setBackground(drawable);
+            final EMVoiceMessageBody voiceBody = (EMVoiceMessageBody)list.get(position).getBody();
+            final SpeexPlayer player = new SpeexPlayer(voiceBody.getLocalUrl(),handler);
+            right.voice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ( (ImageView)v).setImageDrawable(drawable);
+                    if (!drawable.isRunning()){
+                        drawable.start();
+                        player.startPlay();
+                    }else{
+                        drawable.stop();
+                        player.stopPlay(true);
+                        ( (ImageView)v).setImageResource(R.drawable.send_voice_icon_3);
+                    }
+                }
+            });
+        }else if (holder instanceof ViewHolderVoiceLeft){
+            final ViewHolderVoiceLeft left = (ViewHolderVoiceLeft) holder;
+                GlideUtils.getInstance().havaHeadRound(chatPath, left.head, context);
+            getData(position, left.chatLeftTime);
+            drawable1 = (AnimationDrawable) context.getResources().getDrawable(R.drawable.anim_voice_receive);
+            //imageView.setBackground(drawable);
+            final EMVoiceMessageBody voiceBody = (EMVoiceMessageBody)list.get(position).getBody();
+            final SpeexPlayer player = new SpeexPlayer(voiceBody.getLocalUrl(),handler);
+            left.voice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((ImageView)v).setImageDrawable(drawable1);
+
+                    if (!drawable1.isRunning()){
+                        drawable1.start();
+                        player.startPlay();
+                    }else{
+                        drawable1.stop();
+                        player.stopPlay(false);
+                        ((ImageView)v).setImageResource(R.drawable.receive_voice_icon_3);
+                    }
+                }
+            });
         }
 
+    }
+
+    private void getData(int position, TextView tv) {
+        if (position - 1 >= 0) {
+            if (list.get(position).getMsgTime() - list.get(position - 1).getMsgTime() > 300000) {
+                if (tv.getVisibility() != View.VISIBLE) {
+                    tv.setVisibility(View.VISIBLE);
+                }
+                String format = simpleDateFormat.format(list.get(position).getMsgTime());
+                tv.setText(format);
+
+            } else {
+                if (tv.getVisibility() != View.GONE) {
+                    tv.setVisibility(View.GONE);
+                }
+            }
+        }
     }
 
 
@@ -155,13 +255,15 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
 
-
-
-    static class ViewHolderRight extends RecyclerView.ViewHolder{
+    static class ViewHolderRight extends RecyclerView.ViewHolder {
         @BindView(R.id.text_right_image_text)
         TextView textRightImageText;
         @BindView(R.id.text_right_image)
         ImageView textRightImage;
+        @BindView(R.id.chat_error)
+        ImageView chatError;
+        @BindView(R.id.chat_right_time)
+        TextView chatRightTime;
 
         public ViewHolderRight(View view) {
             super(view);
@@ -169,13 +271,43 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    static class ViewHolderLeft extends RecyclerView.ViewHolder{
+    static class ViewHolderLeft extends RecyclerView.ViewHolder {
         @BindView(R.id.text_left_image)
         ImageView textLeftImage;
         @BindView(R.id.text_left_image_text)
         TextView textLeftImageText;
+        @BindView(R.id.chat_left_time)
+        TextView chatLeftTime;
 
         public ViewHolderLeft(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+    }
+    static class ViewHolderVoiceLeft extends RecyclerView.ViewHolder {
+        @BindView(R.id.voice_left_image)
+        ImageView head;
+        @BindView(R.id.chat_left_voice_iv)
+        ImageView voice;
+        @BindView(R.id.chat_voice_left_time)
+        TextView chatLeftTime;
+
+        public ViewHolderVoiceLeft(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+    }
+    static class ViewHolderVoiceRight extends RecyclerView.ViewHolder {
+        @BindView(R.id.voice_right_image)
+        ImageView head;
+        @BindView(R.id.voice_right_image_msg)
+        ImageView voice;
+        @BindView(R.id.voice_right_time)
+        TextView chatRightTime;
+        @BindView(R.id.voice_error)
+        ImageView voiceError;
+
+        public ViewHolderVoiceRight(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }

@@ -1,25 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:padding="10dp"
     android:layout_height="wrap_content">
     <TextView
-        android:id="@+id/text_right_image_text"
-        android:layout_marginLeft="20dp"
-        android:textSize="17sp"
-        android:background="@drawable/message_chat_list_item_send_bg_default"
-        android:layout_width="wrap_content"
-        android:textColor="@color/toast_color"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/text_right_image" />
-    <ImageView
-        android:layout_centerVertical="true"
-        android:src="@drawable/ic_album_default"
-        android:id="@+id/text_right_image"
-        android:layout_alignTop="@+id/text_right_image_text"
-        android:layout_alignParentRight="true"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-         />
+        android:layout_marginBottom="20dp"
+        android:id="@+id/chat_right_time"/>
+ <RelativeLayout
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content">
+     <ImageView
 
-</RelativeLayout>
+         android:id="@+id/chat_error"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginLeft="10dp"
+         android:visibility="gone"
+         android:src="@mipmap/ic_chat_error"
+         android:layout_centerVertical="true"
+         android:layout_toStartOf="@+id/text_right_image_text" />
+     <TextView
+         android:id="@+id/text_right_image_text"
+         android:layout_marginLeft="10dp"
+         android:textSize="17sp"
+         android:background="@drawable/message_chat_list_item_send_bg_default"
+         android:layout_width="wrap_content"
+         android:textColor="@color/toast_color"
+         android:layout_height="wrap_content"
+         android:layout_toLeftOf="@+id/text_right_image" />
+     <ImageView
+         android:layout_centerVertical="true"
+         android:src="@drawable/ic_album_default"
+         android:id="@+id/text_right_image"
+         android:layout_alignTop="@+id/text_right_image_text"
+         android:layout_alignParentRight="true"
+         android:layout_width="45dp"
+         android:layout_height="45dp"
+         />
+ </RelativeLayout>
+
+</LinearLayout>

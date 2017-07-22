@@ -91,11 +91,11 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"
-                android:textColor="@color/tabber"
+                android:textColor="@drawable/sl_chat_color"
                 android:textSize="17sp"
                 android:visibility="gone"
                 android:layout_marginBottom="5dp"
-                android:background="@drawable/sp_voice_bg"
+                android:background="@drawable/sl_bg_voice"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp" />
             <EditText
