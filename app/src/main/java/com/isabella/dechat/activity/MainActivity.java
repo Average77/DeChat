@@ -220,4 +220,10 @@ public class MainActivity extends BaseActivity<LoginContact.LoginView,LoginPrese
     public void failed(Throwable e) {
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mHandler.removeCallbacksAndMessages(null);
+    }
 }

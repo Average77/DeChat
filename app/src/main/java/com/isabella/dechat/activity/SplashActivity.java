@@ -223,5 +223,6 @@ public class SplashActivity extends IActivity {
         if (mListener!=null){
             mListener=null;
         }
+        handler.removeCallbacksAndMessages(null);
     }
 }

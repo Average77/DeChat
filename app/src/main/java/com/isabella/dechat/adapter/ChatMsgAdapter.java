@@ -5,6 +5,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,20 +34,30 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private List<EMMessage> list;
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private AnimationDrawable drawable;
-    private Handler handler=new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            if (msg.what == 0) {
+                drawable1.stop();
+            } else if (msg.what == 1) {
+                drawable.stop();
+                ;
+            }
         }
     };
     private AnimationDrawable drawable1;
     private String chatPath;
     private String imagepath;
+    private SpeexPlayer player;
+    private SpeexPlayer player1;
+    private final int widthPixels;
 
     public ChatMsgAdapter(Context context, List<EMMessage> list) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.list = list;
+        widthPixels = context.getResources().getDisplayMetrics().widthPixels;
     }
 
     private OnItemClickListener mOnItemClickListener;
@@ -91,17 +102,17 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             //将创建的View注册点击事件
 
             return new ViewHolderRight(view);
-        } else if (viewType==1){
+        } else if (viewType == 1) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_chat_text_left, parent, false);
             //将创建的View注册点击事件
 
             return new ViewHolderLeft(view);
-        }else if (viewType==2){
+        } else if (viewType == 2) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_chat_voice_right, parent, false);
             return new ViewHolderVoiceRight(view);
-        }else {
+        } else {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_chat_voice_left, parent, false);
             //将创建的View注册点击事件
@@ -120,7 +131,7 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         if (holder instanceof ViewHolderRight) {
             final ViewHolderRight viewHolderRight = (ViewHolderRight) holder;
-                GlideUtils.getInstance().havaHeadRound(imagepath, viewHolderRight.textRightImage, context);
+            GlideUtils.getInstance().havaHeadRound(imagepath, viewHolderRight.textRightImage, context);
 //            Boolean chatError = PreferencesUtils.getValueByKey(context, "chatError", false);
 //            if (chatError){
 //                if (viewHolderRight.chatError.getVisibility()!=View.VISIBLE){
@@ -181,52 +192,150 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 });
                 getData(position, viewHolderLeft.chatLeftTime);
             }
-        }else if (holder instanceof ViewHolderVoiceRight){
+        } else if (holder instanceof ViewHolderVoiceRight) {
             final ViewHolderVoiceRight right = (ViewHolderVoiceRight) holder;
-                GlideUtils.getInstance().havaHeadRound(imagepath, right.head, context);
+            GlideUtils.getInstance().havaHeadRound(imagepath, right.head, context);
 
             getData(position, right.chatRightTime);
             drawable = (AnimationDrawable) context.getResources().getDrawable(R.drawable.anim_voice_send);
             //imageView.setBackground(drawable);
-            final EMVoiceMessageBody voiceBody = (EMVoiceMessageBody)list.get(position).getBody();
-            final SpeexPlayer player = new SpeexPlayer(voiceBody.getLocalUrl(),handler);
+            final EMVoiceMessageBody voiceBody = (EMVoiceMessageBody) list.get(position).getBody();
+            player = new SpeexPlayer(voiceBody.getLocalUrl(), handler);
+            int m = voiceBody.getLength() / 1000;
+            right.second.setText(m + "″");
+            if (m > 0) {
+                if (m < 60) {
+                    if (m!=1){
+                        int width = widthPixels - 350;
+                        Log.d("ChatMsgAdapter", "m*width/60+40:" + (m * width / 60 + 130));
+                        right.voice.setPadding(10,0,m*width/60+130,0);
+                    }
+                } else {
+                    right.voice.setPadding(10,0,widthPixels-350,0);
+                }
+            }
             right.voice.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ( (ImageView)v).setImageDrawable(drawable);
-                    if (!drawable.isRunning()){
+                    ((ImageView) v).setImageDrawable(drawable);
+                    if (!drawable.isRunning()) {
+                        for (int i = 0; i < list.size(); i++) {
+                            if (list.get(i).getType() == EMMessage.Type.VOICE) {
+                                if (i != position) {
+                                    if (drawable.isRunning()) {
+                                        player.stopPlay(false);
+                                        drawable.stop();
+                                        ((ImageView) v).setImageResource(R.drawable.send_voice_icon_3);
+                                    } else if (drawable1.isRunning()) {
+                                        player1.stopPlay(false);
+                                        drawable1.stop();
+                                    }
+                                }
+                            }
+                        }
                         drawable.start();
                         player.startPlay();
-                    }else{
+                        handler.sendEmptyMessageDelayed(1, voiceBody.getLength());
+                    } else {
                         drawable.stop();
-                        player.stopPlay(true);
-                        ( (ImageView)v).setImageResource(R.drawable.send_voice_icon_3);
+                        player.stopPlay(false);
+                        ((ImageView) v).setImageResource(R.drawable.send_voice_icon_3);
                     }
                 }
             });
-        }else if (holder instanceof ViewHolderVoiceLeft){
+            if (mOnItemClickListener != null) {
+                //为ItemView设置监听器
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = right.getLayoutPosition(); // 1
+                        mOnItemClickListener.onItemClick(right.itemView, position); // 2
+                    }
+                });
+            }
+            if (mOnItemLongClickListener != null) {
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        int position = right.getLayoutPosition();
+                        mOnItemLongClickListener.onItemLongClick(right.itemView, position);
+                        //返回true 表示消耗了事件 事件不会继续传递
+                        return true;
+                    }
+                });
+            }
+        } else if (holder instanceof ViewHolderVoiceLeft) {
             final ViewHolderVoiceLeft left = (ViewHolderVoiceLeft) holder;
-                GlideUtils.getInstance().havaHeadRound(chatPath, left.head, context);
+            GlideUtils.getInstance().havaHeadRound(chatPath, left.head, context);
+
             getData(position, left.chatLeftTime);
             drawable1 = (AnimationDrawable) context.getResources().getDrawable(R.drawable.anim_voice_receive);
             //imageView.setBackground(drawable);
-            final EMVoiceMessageBody voiceBody = (EMVoiceMessageBody)list.get(position).getBody();
-            final SpeexPlayer player = new SpeexPlayer(voiceBody.getLocalUrl(),handler);
+            final EMVoiceMessageBody voiceBody = (EMVoiceMessageBody) list.get(position).getBody();
+            player1 = new SpeexPlayer(voiceBody.getLocalUrl(), handler);
+            int m = voiceBody.getLength() / 1000;
+            left.second.setText(m + "″");
+            if (m > 0) {
+                if (m < 60) {
+                    if (m!=1){
+                        int width = widthPixels - 350;
+                        left.voice.setPadding(m*width/60+120,0,10,0);
+                    }
+                } else {
+                    left.voice.setPadding(widthPixels-350,0,10,0);
+                }
+            }
             left.voice.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((ImageView)v).setImageDrawable(drawable1);
+                    ((ImageView) v).setImageDrawable(drawable1);
 
-                    if (!drawable1.isRunning()){
+                    if (!drawable1.isRunning()) {
+                        for (int i = 0; i < list.size(); i++) {
+                            if (list.get(i).getType() == EMMessage.Type.VOICE) {
+                                if (i != position) {
+                                    if (drawable.isRunning()) {
+                                        player.stopPlay(false);
+                                        drawable.stop();
+                                    } else if (drawable1.isRunning()) {
+                                        player1.stopPlay(false);
+                                        drawable1.stop();
+                                        ((ImageView) v).setImageResource(R.drawable.receive_voice_icon_3);
+                                    }
+                                }
+                            }
+                        }
                         drawable1.start();
-                        player.startPlay();
-                    }else{
+                        player1.startPlay();
+                        handler.sendEmptyMessageDelayed(0, voiceBody.getLength());
+                    } else {
                         drawable1.stop();
-                        player.stopPlay(false);
-                        ((ImageView)v).setImageResource(R.drawable.receive_voice_icon_3);
+                        player1.stopPlay(false);
+                        ((ImageView) v).setImageResource(R.drawable.receive_voice_icon_3);
                     }
                 }
             });
+            if (mOnItemClickListener != null) {
+                //为ItemView设置监听器
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = left.getLayoutPosition(); // 1
+                        mOnItemClickListener.onItemClick(left.itemView, position); // 2
+                    }
+                });
+            }
+            if (mOnItemLongClickListener != null) {
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        int position = left.getLayoutPosition();
+                        mOnItemLongClickListener.onItemLongClick(left.itemView, position);
+                        //返回true 表示消耗了事件 事件不会继续传递
+                        return true;
+                    }
+                });
+            }
         }
 
     }
@@ -284,6 +393,7 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ButterKnife.bind(this, view);
         }
     }
+
     static class ViewHolderVoiceLeft extends RecyclerView.ViewHolder {
         @BindView(R.id.voice_left_image)
         ImageView head;
@@ -291,12 +401,15 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ImageView voice;
         @BindView(R.id.chat_voice_left_time)
         TextView chatLeftTime;
+        @BindView(R.id.voice_left_second)
+        TextView second;
 
         public ViewHolderVoiceLeft(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
     }
+
     static class ViewHolderVoiceRight extends RecyclerView.ViewHolder {
         @BindView(R.id.voice_right_image)
         ImageView head;
@@ -306,10 +419,25 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         TextView chatRightTime;
         @BindView(R.id.voice_error)
         ImageView voiceError;
+        @BindView(R.id.voice_right_second)
+        TextView second;
 
         public ViewHolderVoiceRight(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
+    }
+    public void destory(){
+        if (player!=null){
+            player.stopPlay(true);
+            drawable.stop();
+            player=null;
+        }
+        if (player1!=null){
+            player1.stopPlay(true);
+            drawable1.stop();
+            player1=null;
+        }
+        handler.removeCallbacksAndMessages(null);
     }
 }

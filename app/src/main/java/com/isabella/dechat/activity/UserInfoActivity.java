@@ -89,6 +89,20 @@ public class UserInfoActivity extends BaseActivity<UserInfoContact.UserInfoView,
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (builder!=null){
+            builder=null;
+        }
+        if (dialogLogin!=null){
+            dialogLogin=null;
+        }
+        if (dialogAddFriend!=null){
+            dialogAddFriend=null;
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);

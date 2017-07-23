@@ -32,7 +32,8 @@
             android:id="@+id/voice_right_image_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="20dp"
+            android:paddingRight="40dp"
             android:layout_toLeftOf="@+id/voice_right_image"
             android:background="@drawable/message_chat_list_item_send_bg_default"
             android:src="@drawable/send_voice_icon_3"
@@ -47,6 +48,15 @@
             android:layout_alignTop="@+id/voice_right_image_msg"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_album_default" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:textColor="@color/tabber"
+            android:id="@+id/voice_right_second"
+            android:layout_toLeftOf="@id/voice_right_image"
+            android:text="@string/second"/>
     </RelativeLayout>
 
 </LinearLayout>

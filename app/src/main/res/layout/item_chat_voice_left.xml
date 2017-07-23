@@ -13,7 +13,7 @@
         android:gravity="center_horizontal"
         android:visibility="gone" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -26,14 +26,25 @@
             android:src="@drawable/ic_album_default" />
 
         <ImageView
+            android:layout_toRightOf="@id/voice_left_image"
+            android:layout_alignTop="@id/voice_left_image"
             android:id="@+id/chat_left_voice_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="40dp"
             android:layout_centerVertical="true"
             android:src="@drawable/receive_voice_icon_3"
             android:background="@drawable/message_chat_list_item_receive_bg_default"
             android:textColor="@color/toast_color"
             android:textSize="17sp" />
-    </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="25dp"
+            android:id="@+id/voice_left_second"
+            android:layout_toRightOf="@id/voice_left_image"
+            android:text="@string/second"/>
+    </RelativeLayout>
 
 </LinearLayout>

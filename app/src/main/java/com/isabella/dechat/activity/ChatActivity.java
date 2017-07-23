@@ -148,6 +148,7 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
         setRefresh();
         getKeyHeight();
 
+
         chatEt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -598,7 +599,8 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
     protected void onDestroy() {
         super.onDestroy();
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
-
+        handler.removeCallbacksAndMessages(null);
+        adapter.destory();
     }
 
     @OnClick({R.id.chat_back, R.id.chat_user_info, R.id.chat_voice, R.id.chat_btn_sendtext})

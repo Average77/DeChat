@@ -211,6 +211,8 @@ public class LoginActivity extends BaseActivity<LoginContact.LoginView, LoginPre
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        if (builder!=null){
+            builder=null;
+        }
     }
 }

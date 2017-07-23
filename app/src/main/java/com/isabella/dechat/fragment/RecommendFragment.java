@@ -56,6 +56,21 @@ public class RecommendFragment extends BaseFragment<RecyclerContact.RecyView, Re
     //private List<NearbyDataBean> nearbyDataBeen;
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (linearLayoutManager!=null)
+            linearLayoutManager=null;
+        if (staggeredGridLayoutManager!=null)
+            staggeredGridLayoutManager=null;
+        if (horizontalDividerItemDecoration!=null)
+            horizontalDividerItemDecoration=null;
+        if (decoration!=null)
+            decoration=null;
+        if (adapter!=null)
+            adapter=null;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recommend, container, false);

@@ -75,19 +75,30 @@ public class FriendFragment extends BaseFragment<FriendContact.FriendView, Frien
     private PinyinComparator pinyinComparator;
     boolean temp = false;
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (characterParser != null)
+            characterParser = null;
+        if (pinyinComparator != null)
+            pinyinComparator = null;
+        if (adapter != null)
+            adapter = null;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friend, container, false);
         unbinder = ButterKnife.bind(this, view);
-        if (!PreferencesUtils.getValueByKey(getActivity(),"isLogin",false)){
+        if (!PreferencesUtils.getValueByKey(getActivity(), "isLogin", false)) {
             friendTipsLoginIv.setVisibility(View.VISIBLE);
             friendTipsLoginTv.setVisibility(View.VISIBLE);
             springView.setVisibility(View.INVISIBLE);
             sideBar.setVisibility(View.INVISIBLE);
             sortListView.setVisibility(View.INVISIBLE);
             mClearEditText.setVisibility(View.INVISIBLE);
-        }else{
+        } else {
             friendTipsLoginIv.setVisibility(View.GONE);
             friendTipsLoginTv.setVisibility(View.GONE);
             springView.setVisibility(View.VISIBLE);
@@ -123,7 +134,7 @@ public class FriendFragment extends BaseFragment<FriendContact.FriendView, Frien
             }
         });
 
-        presenter.getData(System.currentTimeMillis(),true);
+        presenter.getData(System.currentTimeMillis(), true);
         sortListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -135,8 +146,8 @@ public class FriendFragment extends BaseFragment<FriendContact.FriendView, Frien
                 PreferencesUtils.addConfigInfo(IApplication.getApplication(), "chatId", item.getUserId());
                 PreferencesUtils.addConfigInfo(IApplication.getApplication(), "chatPath", item.getUrl());
                 PreferencesUtils.addConfigInfo(IApplication.getApplication(), "chatUserName", item.getName());
-                toActivity(ChatActivity.class,null,0);
-               // MyToast.getInstance().makeText(item.getName());
+                toActivity(ChatActivity.class, null, 0);
+                // MyToast.getInstance().makeText(item.getName());
             }
         });
 
@@ -151,7 +162,7 @@ public class FriendFragment extends BaseFragment<FriendContact.FriendView, Frien
             @Override
             public void onRefresh() {
                 temp = true;
-                presenter.getData(System.currentTimeMillis(),temp);
+                presenter.getData(System.currentTimeMillis(), temp);
             }
 
             @Override
@@ -173,7 +184,7 @@ public class FriendFragment extends BaseFragment<FriendContact.FriendView, Frien
 //                    KLog.i("-9==========",list.get(list.size() - 9).getLasttime());
 //                    KLog.i("-10==========",list.get(list.size() - 10).getLasttime());
 //                   // KLog.i("-11==========",list.get(list.size() - 11).getLasttime());
-                    presenter.getData(lastTime,temp);
+                    presenter.getData(lastTime, temp);
                 }
 
 
@@ -196,7 +207,7 @@ public class FriendFragment extends BaseFragment<FriendContact.FriendView, Frien
     }
 
     @Override
-    public void success(List<FriendListDataBean> date,boolean isData) {
+    public void success(List<FriendListDataBean> date, boolean isData) {
         springView.onFinishFreshAndLoad();
         if (date == null || date.size() == 0) {
             return;
@@ -206,9 +217,9 @@ public class FriendFragment extends BaseFragment<FriendContact.FriendView, Frien
             list.clear();
             SourceDateList.clear();
         }
-        if (isData &&! temp) {
-        }else{
-            if (date!=null&&date.size()!=0) {
+        if (isData && !temp) {
+        } else {
+            if (date != null && date.size() != 0) {
                 list.addAll(date);
             }
         }
@@ -222,8 +233,8 @@ public class FriendFragment extends BaseFragment<FriendContact.FriendView, Frien
         names = constact.toArray(names);
         List<SortModel> sortModels = filledData(names);
         if (isData && !temp) {
-        }else{
-            if (sortModels!=null&&sortModels.size()!=0) {
+        } else {
+            if (sortModels != null && sortModels.size() != 0) {
                 SourceDateList.addAll(sortModels);
             }
         }
@@ -329,7 +340,7 @@ public class FriendFragment extends BaseFragment<FriendContact.FriendView, Frien
     @OnClick(R.id.friend_tips_login_iv)
     public void onViewClicked() {
         IApplication.setIsStart(true);
-        toActivity(SplashActivity.class,null,0);
+        toActivity(SplashActivity.class, null, 0);
         AppManager.getAppManager().finishActivity(MainActivity.class);
     }
 }

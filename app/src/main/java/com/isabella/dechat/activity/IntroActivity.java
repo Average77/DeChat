@@ -234,4 +234,12 @@ public class IntroActivity extends BaseActivity<RegisterContact.RegisterView, Re
         MyToast.getInstance().makeText("注册失败");
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (builder!=null){
+            builder=null;
+        }
+    }
 }

@@ -264,6 +264,7 @@ public class PhoneRegisterActivity extends IActivity {
     protected void onDestroy() {
         super.onDestroy();
         SMSSDK.unregisterEventHandler(eventHandler);
+        handler.removeCallbacksAndMessages(null);
     }
 
     @OnClick({R.id.phone_register_back})

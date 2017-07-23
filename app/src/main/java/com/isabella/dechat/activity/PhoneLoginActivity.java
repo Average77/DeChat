@@ -236,5 +236,6 @@ public class PhoneLoginActivity extends IActivity {
     protected void onDestroy() {
         super.onDestroy();
         SMSSDK.unregisterEventHandler(eventHandler);
+        handler.removeCallbacksAndMessages(null);
     }
 }

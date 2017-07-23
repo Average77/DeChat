@@ -46,6 +46,9 @@ public class FreshFragment extends IFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        if (builder!=null){
+            builder=null;
+        }
     }
 
     @OnClick({ R.id.friend_circle_fresh, R.id.rish_scan_fresh, R.id.nearby_fresh})

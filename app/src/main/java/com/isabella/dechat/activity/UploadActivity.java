@@ -437,5 +437,17 @@ public class UploadActivity extends BaseActivity<UploadContact.UploadView, Uploa
         MyToast.getInstance().makeText(  "上传失败");
         Log.d("UploadActivity", "e:" + e);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
+        if (builder!=null){
+            builder=null;
+        }
+        if (dialogLogin!=null){
+            builder=null;
+        }
+    }
 }
 
