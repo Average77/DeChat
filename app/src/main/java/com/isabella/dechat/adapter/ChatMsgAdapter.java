@@ -19,12 +19,17 @@ import com.isabella.dechat.speex.SpeexPlayer;
 import com.isabella.dechat.util.EaseSmileUtils;
 import com.isabella.dechat.util.GlideUtils;
 import com.isabella.dechat.util.PreferencesUtils;
+import com.jakewharton.rxbinding2.view.RxView;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 
 
 public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -214,35 +219,37 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     right.voice.setPadding(10,0,widthPixels-350,0);
                 }
             }
-            right.voice.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((ImageView) v).setImageDrawable(drawable);
-                    if (!drawable.isRunning()) {
-                        for (int i = 0; i < list.size(); i++) {
-                            if (list.get(i).getType() == EMMessage.Type.VOICE) {
-                                if (i != position) {
-                                    if (drawable.isRunning()) {
-                                        player.stopPlay(false);
-                                        drawable.stop();
-                                        ((ImageView) v).setImageResource(R.drawable.send_voice_icon_3);
-                                    } else if (drawable1.isRunning()) {
-                                        player1.stopPlay(false);
-                                        drawable1.stop();
+            RxView.clicks(right.voice).throttleFirst(1, TimeUnit.MILLISECONDS)
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<Object>() {
+                        @Override
+                        public void accept(@NonNull Object o) throws Exception {
+                            right.voice.setImageDrawable(drawable);
+                            if (!drawable.isRunning()) {
+                                for (int i = 0; i < list.size(); i++) {
+                                    if (list.get(i).getType() == EMMessage.Type.VOICE) {
+                                        if (i != position) {
+                                            if (drawable.isRunning()) {
+                                                player.stopPlay(false);
+                                                drawable.stop();
+                                                right.voice.setImageResource(R.drawable.send_voice_icon_3);
+                                            } else if (drawable1.isRunning()) {
+                                                player1.stopPlay(false);
+                                                drawable1.stop();
+                                            }
+                                        }
                                     }
                                 }
+                                drawable.start();
+                                player.startPlay();
+                                handler.sendEmptyMessageDelayed(1, voiceBody.getLength());
+                            } else {
+                                drawable.stop();
+                                player.stopPlay(false);
+                                right.voice.setImageResource(R.drawable.send_voice_icon_3);
                             }
                         }
-                        drawable.start();
-                        player.startPlay();
-                        handler.sendEmptyMessageDelayed(1, voiceBody.getLength());
-                    } else {
-                        drawable.stop();
-                        player.stopPlay(false);
-                        ((ImageView) v).setImageResource(R.drawable.send_voice_icon_3);
-                    }
-                }
-            });
+                    });
             if (mOnItemClickListener != null) {
                 //为ItemView设置监听器
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -285,36 +292,39 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     left.voice.setPadding(widthPixels-350,0,10,0);
                 }
             }
-            left.voice.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((ImageView) v).setImageDrawable(drawable1);
+            RxView.clicks(left.voice).throttleFirst(1, TimeUnit.MILLISECONDS)
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<Object>() {
+                        @Override
+                        public void accept(@NonNull Object o) throws Exception {
+                            left.voice.setImageDrawable(drawable1);
 
-                    if (!drawable1.isRunning()) {
-                        for (int i = 0; i < list.size(); i++) {
-                            if (list.get(i).getType() == EMMessage.Type.VOICE) {
-                                if (i != position) {
-                                    if (drawable.isRunning()) {
-                                        player.stopPlay(false);
-                                        drawable.stop();
-                                    } else if (drawable1.isRunning()) {
-                                        player1.stopPlay(false);
-                                        drawable1.stop();
-                                        ((ImageView) v).setImageResource(R.drawable.receive_voice_icon_3);
+                            if (!drawable1.isRunning()) {
+                                for (int i = 0; i < list.size(); i++) {
+                                    if (list.get(i).getType() == EMMessage.Type.VOICE) {
+                                        if (i != position) {
+                                            if (drawable.isRunning()) {
+                                                player.stopPlay(false);
+                                                drawable.stop();
+                                            } else if (drawable1.isRunning()) {
+                                                player1.stopPlay(false);
+                                                drawable1.stop();
+                                                left.voice.setImageResource(R.drawable.receive_voice_icon_3);
+                                            }
+                                        }
                                     }
                                 }
+                                drawable1.start();
+                                player1.startPlay();
+                                handler.sendEmptyMessageDelayed(0, voiceBody.getLength());
+                            } else {
+                                drawable1.stop();
+                                player1.stopPlay(false);
+                                left.voice.setImageResource(R.drawable.receive_voice_icon_3);
                             }
                         }
-                        drawable1.start();
-                        player1.startPlay();
-                        handler.sendEmptyMessageDelayed(0, voiceBody.getLength());
-                    } else {
-                        drawable1.stop();
-                        player1.stopPlay(false);
-                        ((ImageView) v).setImageResource(R.drawable.receive_voice_icon_3);
-                    }
-                }
-            });
+                    });
+
             if (mOnItemClickListener != null) {
                 //为ItemView设置监听器
                 holder.itemView.setOnClickListener(new View.OnClickListener() {

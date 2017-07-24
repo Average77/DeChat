@@ -119,7 +119,9 @@
 
         <activity
             android:name=".activity.ChatActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <activity android:name=".activity.TelActivity" android:launchMode="singleInstance"/>
+
     </application>
 
 </manifest>

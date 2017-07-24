@@ -2,11 +2,14 @@ package com.isabella.dechat.base;
 
 import android.app.ActivityManager;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.util.Log;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
+import com.isabella.dechat.R;
 import com.isabella.dechat.dao.DaoMaster;
 import com.isabella.dechat.dao.DaoSession;
 import com.mob.MobApplication;
@@ -124,5 +127,32 @@ public class IApplication extends MobApplication {
             }
         }
         return processName;
+    }
+    public static void ring(){
+        SoundPool soundPool = new SoundPool(3, AudioManager.STREAM_MUSIC,0);
+
+        soundPool.load(application, R.raw.avchat_ring,1);
+        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                soundPool.play(sampleId,1, 1, 0, 0, 1);
+            }
+        });
+
+    }
+
+
+    public static void callTo(){
+        SoundPool soundPool = new SoundPool(3, AudioManager.STREAM_MUSIC,0);
+
+        soundPool.load(application, R.raw.avchat_connecting,1);
+        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                soundPool.play(sampleId,1, 1, 0, 0, 1);
+            }
+        });
+
+
     }
 }

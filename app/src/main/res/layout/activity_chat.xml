@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.isabella.dechat.activity.ChatActivity">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -19,14 +20,15 @@
             android:layout_marginLeft="10dp"
             android:alpha="0.8"
             android:src="@drawable/btn_back" />
+
         <TextView
             android:id="@+id/chat_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-           android:layout_centerInParent="true"
+            android:layout_centerInParent="true"
             android:text="@string/register"
-            android:textSize="18sp"
-            android:textColor="@color/bg_text_color" />
+            android:textColor="@color/bg_text_color"
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/chat_user_info"
@@ -36,121 +38,167 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:alpha="0.9"
-           android:background="@mipmap/ic_user" />
+            android:background="@mipmap/ic_user" />
     </RelativeLayout>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/chat_swipe"
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <android.support.v7.widget.RecyclerView
-
-        android:background="@color/chat_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/chat_recycler"
-        />
+        android:layout_weight="1">
+
+        <android.support.v7.widget.RecyclerView
+
+            android:id="@+id/chat_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/chat_background" />
     </android.support.v4.widget.SwipeRefreshLayout>
     <!--<ListView-->
-        <!--android:layout_weight="1"-->
-        <!--android:background="@color/chat_background"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:divider="@null"-->
-        <!--android:listSelector="#00000000"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:id="@+id/chat_listview"-->
-        <!--/>-->
+    <!--android:layout_weight="1"-->
+    <!--android:background="@color/chat_background"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:divider="@null"-->
+    <!--android:listSelector="#00000000"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:id="@+id/chat_listview"-->
+    <!--/>-->
 
 
     <LinearLayout
-        android:background="@color/bg_text_color"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:orientation="vertical">
-       <View
-           android:layout_width="match_parent"
-           android:layout_height="0.5dp"
-           android:background="@color/line_color"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bg_text_color"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/line_color" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="55dp" android:orientation="horizontal">
-           <CheckBox
-               android:id="@+id/chat_voice"
-               android:layout_width="wrap_content"
-               android:button="@null"
-               android:layout_marginLeft="5dp"
-               android:layout_gravity="center_vertical"
-               android:layout_height="wrap_content"
-               android:background="@drawable/sl_voice"/>
-            <Button
-                android:id="@+id/chat_bt"
-                android:layout_weight="1"
-                android:text="按住说话"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="5dp"
-                android:textColor="@drawable/sl_chat_color"
-                android:textSize="17sp"
-                android:visibility="gone"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/sl_bg_voice"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp" />
-            <EditText
-                android:id="@+id/chat_et"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            android:layout_height="60dp"
+            android:orientation="horizontal">
+
             <CheckBox
+                android:id="@+id/chat_voice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:button="@null"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/sl_voice"
+                android:button="@null" />
+
+            <Button
+                android:id="@+id/chat_bt"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/sl_bg_voice"
+                android:text="按住说话"
+                android:textColor="@drawable/sl_chat_color"
+                android:textSize="17sp"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/chat_et"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1" />
+
+            <CheckBox
+                android:id="@+id/chat_express"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="5dp"
                 android:background="@drawable/sl_express"
-                android:id="@+id/chat_express"/>
+                android:button="@null" />
+
             <CheckBox
-                android:layout_width="wrap_content"
+                android:id="@+id/chat_plus"
+                android:layout_width="35dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/sl_chat_plus"
+                android:button="@null" />
 
-                android:button="@null"
-                android:id="@+id/chat_plus"/>
             <Button
                 android:id="@+id/chat_btn_sendtext"
-                android:layout_width="40dp"
+                android:layout_width="35dp"
                 android:layout_height="30dp"
-                android:layout_marginRight="5dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/sl_send"
                 android:text="发送"
-                android:visibility="gone"
                 android:textColor="@color/bg_text_color"
-                android:background="@drawable/sl_send"/>
+                android:textSize="14sp"
+                android:visibility="gone" />
         </LinearLayout>
 
 
-
-       <!--&lt;!&ndash;<include layout="@layout/ease_widget_emojicon"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;<include layout="@layout/ease_widget_emojicon"/>&ndash;&gt;-->
         <!--<com.isabella.dechat.widget.emojicon.EaseEmojiconMenu xmlns:android="http://schemas.android.com/apk/res/android"-->
-            <!--android:id="@+id/emojicon"-->
-            <!--android:visibility="gone"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content" />-->
+        <!--android:id="@+id/emojicon"-->
+        <!--android:visibility="gone"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content" />-->
         <LinearLayout
-            android:orientation="horizontal"
-            android:visibility="gone"
+            android:id="@+id/buttom_layout_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/buttom_layout_view"
-            >
-        </LinearLayout>
+            android:orientation="horizontal"
+            android:visibility="gone"></LinearLayout>
+
+        <TableLayout
+            android:id="@+id/chat_plus_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TableRow>
+
+                <ImageView
+                    android:id="@+id/chat_picture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@mipmap/ic_chat_pic" />
+
+                <ImageView
+                    android:id="@+id/chat_camera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@mipmap/ic_chat_camera" />
+
+                <ImageView
+                    android:id="@+id/chat_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@mipmap/ic_chat_voice" />
+
+                <ImageView
+                    android:id="@+id/chat_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@mipmap/ic_chat_loc" />
+            </TableRow>
+        </TableLayout>
     </LinearLayout>
 
 </LinearLayout>

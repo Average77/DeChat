@@ -1,6 +1,9 @@
 package com.isabella.dechat.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,15 +20,17 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hyphenate.chat.EMClient;
 import com.isabella.dechat.R;
 import com.isabella.dechat.base.BaseActivity;
+import com.isabella.dechat.base.IApplication;
 import com.isabella.dechat.bean.LoginBean;
 import com.isabella.dechat.contact.LoginContact;
 import com.isabella.dechat.fragment.FreshFragment;
 import com.isabella.dechat.fragment.FriendFragment;
 import com.isabella.dechat.fragment.MessageFragment;
-import com.isabella.dechat.fragment.RecommendFragment;
 import com.isabella.dechat.fragment.MyFragment;
+import com.isabella.dechat.fragment.RecommendFragment;
 import com.isabella.dechat.presenter.LoginPresenter;
 import com.isabella.dechat.util.PreferencesUtils;
 
@@ -116,6 +121,7 @@ public class MainActivity extends BaseActivity<LoginContact.LoginView,LoginPrese
             loginPresenter.getData(PreferencesUtils.getValueByKey(this, "phone", ""),PreferencesUtils.getValueByKey(this, "password", ""));
 
         }
+        incoming();
     }
     private void InputType(View view) {
         //判断输入法的隐藏状态
@@ -179,8 +185,29 @@ public class MainActivity extends BaseActivity<LoginContact.LoginView,LoginPrese
 
 
     }
+    private class CallReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // 拨打方username
+            String from = intent.getStringExtra("from");
+            // call type
+            String type = intent.getStringExtra("type");
+            //跳转到通话页面
+
+            IApplication.ring();
+
+            TelActivity.startTelActivity(2,from,MainActivity.this);
 
 
+        }
+    }
+
+    public void incoming() {
+        CallReceiver callReceiver = new CallReceiver();
+        IntentFilter callFilter = new IntentFilter(EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
+        registerReceiver(callReceiver, callFilter);
+    }
     public void switchFragment(int pos) {
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
