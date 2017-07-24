@@ -230,11 +230,11 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                                     if (list.get(i).getType() == EMMessage.Type.VOICE) {
                                         if (i != position) {
                                             if (drawable.isRunning()) {
-                                                player.stopPlay(false);
+                                                player.stopPlay(true);
                                                 drawable.stop();
                                                 right.voice.setImageResource(R.drawable.send_voice_icon_3);
                                             } else if (drawable1.isRunning()) {
-                                                player1.stopPlay(false);
+                                                player1.stopPlay(true);
                                                 drawable1.stop();
                                             }
                                         }
@@ -245,7 +245,7 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                                 handler.sendEmptyMessageDelayed(1, voiceBody.getLength());
                             } else {
                                 drawable.stop();
-                                player.stopPlay(false);
+                                player.stopPlay(true);
                                 right.voice.setImageResource(R.drawable.send_voice_icon_3);
                             }
                         }
@@ -304,10 +304,10 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                                     if (list.get(i).getType() == EMMessage.Type.VOICE) {
                                         if (i != position) {
                                             if (drawable.isRunning()) {
-                                                player.stopPlay(false);
+                                                player.stopPlay(true);
                                                 drawable.stop();
                                             } else if (drawable1.isRunning()) {
-                                                player1.stopPlay(false);
+                                                player1.stopPlay(true);
                                                 drawable1.stop();
                                                 left.voice.setImageResource(R.drawable.receive_voice_icon_3);
                                             }
@@ -319,7 +319,7 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                                 handler.sendEmptyMessageDelayed(0, voiceBody.getLength());
                             } else {
                                 drawable1.stop();
-                                player1.stopPlay(false);
+                                player1.stopPlay(true);
                                 left.voice.setImageResource(R.drawable.receive_voice_icon_3);
                             }
                         }

@@ -101,9 +101,9 @@ public class TelActivity extends Activity {
             }
         } else {
             //接听电话
-            telActivityHandup.setVisibility(View.VISIBLE);
-            telActivityAccept.setVisibility(View.GONE);
-            telActivityDisaccept.setVisibility(View.GONE);
+            telActivityHandup.setVisibility(View.GONE);
+            telActivityAccept.setVisibility(View.VISIBLE);
+            telActivityDisaccept.setVisibility(View.VISIBLE);
 
 
         }
@@ -197,10 +197,10 @@ public class TelActivity extends Activity {
 //                    接听电
                     int tag = (int) telActivityAccept.getTag();
                     if (tag == 1) {
-                        tag = 2;
-                        telActivityAccept.setVisibility(View.GONE);
-                        telActivityDisaccept.setVisibility(View.GONE);
-                        telActivityHandup.setVisibility(View.VISIBLE);
+                        telActivityAccept.setTag(2);
+                        telActivityAccept.setVisibility(View.VISIBLE);
+                        telActivityDisaccept.setVisibility(View.VISIBLE);
+                        telActivityHandup.setVisibility(View.GONE);
                         EMClient.getInstance().callManager().answerCall();
                     } else {
 
@@ -251,5 +251,6 @@ public class TelActivity extends Activity {
         super.onDestroy();
         surfaceBig=null;
         surfaceSmall=null;
+         EMClient.getInstance().callManager().clearRtcConnection();
     }
 }

@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -99,9 +101,9 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
     @BindView(R.id.chat_plus_view)
     TableLayout chatPlusView;
     private ChatMsgAdapter adapter;
-    boolean btn_voice = false;
     private SpeexRecorder recorderInstance;
-    private List<EaseEmojiconGroupEntity> emojiconGroupList = new ArrayList<>();
+    private PopupWindow pw;
+    boolean flag = true;
     Handler handler = new Handler() {
 
         @Override
@@ -112,6 +114,14 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
                     adapter.notifyDataSetChanged();
                     //chatRecycler.setSelection(chatRecycler.getBottom());
                     chatRecycler.scrollToPosition(adapter.getItemCount() - 1);
+                    break;
+                case 250:
+                    Log.d("ChatActivity", "msg.obj:" + msg.obj);
+                    // if (msg.obj instanceof  Double) {
+                    final double gb = (double) msg.obj;
+                    setLevel(gb);
+
+                    // }
                     break;
             }
         }
@@ -124,6 +134,35 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
     private long startVoiceT;
     private String fileName;
     private int userId;
+    private TextView textView;
+    private ImageView voice_db;
+    private ImageView cancel;
+    private LinearLayout line;
+    private static final int DISTANCE_Y_CANCEL = 50;
+
+    public void setLevel(double gb) {
+        if (gb < 40) {
+            voice_db.setImageResource(R.drawable.amp1);
+            return;
+        } else if (gb < 50) {
+            voice_db.setImageResource(R.drawable.amp2);
+            return;
+        } else if (gb < 60) {
+            voice_db.setImageResource(R.drawable.amp3);
+            return;
+        } else if (gb < 70) {
+            voice_db.setImageResource(R.drawable.amp4);
+            return;
+        } else if (gb < 80) {
+            voice_db.setImageResource(R.drawable.amp5);
+            return;
+        } else if (gb < 90) {
+            voice_db.setImageResource(R.drawable.amp6);
+            return;
+        } else {
+            voice_db.setImageResource(R.drawable.amp7);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +179,7 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
         chatRecycler.setLayoutManager(linearLayoutManager);
         initEmoje(null);
         initLisitener();
+
         chatId = PreferencesUtils.getValueByKey(this, "chatId", 1);
         conversation = EMClient.getInstance().chatManager().getConversation(chatId + "");
         if (conversation != null) {
@@ -150,7 +190,7 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
 
         }
         getMessage();
-
+        initPopup();
 
         //SDK初始化加载的聊天记录为20条，到顶时需要去DB里获取更多
         //获取startMsgId之前的pagesize条消息，此方法获取的messages SDK会自动存入到此会话中，APP中无需再次把获取到的messages添加到会话中
@@ -166,17 +206,15 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
         chatEt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               setKeyBoardModelResize();
+                setKeyBoardModelResize();
                 if (chatExpress.isChecked() || chatPlus.isChecked()) {
                     chatExpress.setChecked(false);
                     chatPlus.setChecked(false);
                     setKeyBoardModelPan();
                 } else {
-                    if (buttomLayoutView.getVisibility()==View.VISIBLE) {
+                    if (buttomLayoutView.getVisibility() == View.VISIBLE || chatPlusView.getVisibility() == View.VISIBLE) {
                         setKeyBoardModelPan();
-                    } else if (chatPlusView.getVisibility()==View.VISIBLE){
-                        setKeyBoardModelPan();
-                    }else {
+                    } else {
                         setKeyBoardModelResize();
                     }
                 }
@@ -188,36 +226,114 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
             @Override
             public void onClick(View v) {
                 setKeyBoardModelPan();
-                if (!((CheckBox) v).isChecked()) {
-                    //  显示键盘
-                    showKeyBoard(chatEt);
-
-                }
                 if (chatVoice.isChecked()) {
                     chatVoice.setChecked(false);
-                    chatBt.setVisibility(View.GONE);
                     chatEt.setVisibility(View.VISIBLE);
-                    btn_voice = false;
+                    chatBt.setVisibility(View.GONE);
                 }
                 if (((CheckBox) v).isChecked()) {
-
+                    ((CheckBox) v).setChecked(true);
                     // 显示表情
                     hidenKeyBoard(chatEt);
                     buttomLayoutView.setVisibility(View.VISIBLE);
                     chatPlusView.setVisibility(View.GONE);
                     chatPlus.setChecked(false);
 
+
                     //  chatRecycler.scrollToPosition(adapter.getItemCount() - 1);
+                } else {
+                    ((CheckBox) v).setChecked(false);
+                    showKeyBoard(chatEt);
+
                 }
 
             }
         });
+        voice();
+        chatPlus.setOnClickListener(new View.OnClickListener() {
+
+
+            @Override
+            public void onClick(View v) {
+                setKeyBoardModelPan();
+                Log.d("ChatActivity", "((CheckBox) v).isChecked():" + ((CheckBox) v).isChecked());
+                if (chatVoice.isChecked()) {
+                    chatVoice.setChecked(false);
+                    chatBt.setVisibility(View.GONE);
+                    chatEt.setVisibility(View.VISIBLE);
+                }
+                if (((CheckBox) v).isChecked()) {
+                    ((CheckBox) v).setChecked(true);
+                    hidenKeyBoard(chatEt);
+                    chatPlusView.setVisibility(View.VISIBLE);
+                    if (buttomLayoutView.getVisibility() != View.GONE) {
+                        buttomLayoutView.setVisibility(View.GONE);
+                    }
+
+                    chatRecycler.scrollToPosition(adapter.getItemCount() - 1);
+
+
+                    chatExpress.setChecked(false);
+
+
+                } else {
+                    ((CheckBox) v).setChecked(false);
+                    chatPlusView.setVisibility(View.GONE);
+                    if (buttomLayoutView.getVisibility() != View.GONE) {
+                        buttomLayoutView.setVisibility(View.GONE);
+                    }
+
+                }
+
+            }
+        });
+        userId = PreferencesUtils.getValueByKey(this, "userId", 1);
+        setKeyBoardModelResize();
+        String chatUserName = PreferencesUtils.getValueByKey(this, "chatUserName", "");
+        chatUsername.setText(chatUserName);
+        receive();
+
+        RxView.clicks(chatVoice).throttleFirst(1, TimeUnit.MILLISECONDS)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(@NonNull Object o) throws Exception {
+                        setKeyBoardModelResize();
+                        if (chatVoice.isChecked()) {
+                            chatBt.setVisibility(View.VISIBLE);
+                            chatEt.setVisibility(View.GONE);
+                            hidenKeyBoard(chatEt);
+                            if (buttomLayoutView.getVisibility() == View.VISIBLE) {
+                                buttomLayoutView.setVisibility(View.GONE);
+                                chatExpress.setChecked(false);
+                                chatPlus.setChecked(false);
+                            }
+                            if (chatPlusView.getVisibility() == View.VISIBLE) {
+                                chatPlusView.setVisibility(View.GONE);
+                                chatExpress.setChecked(false);
+                                chatPlus.setChecked(false);
+                            }
+                        } else {
+                            chatBt.setVisibility(View.GONE);
+                            chatEt.setVisibility(View.VISIBLE);
+                            // showKeyBoard(chatEt);
+                            showKeyBoard(chatEt);
+                            //  chatEt.setFocusable(true);
+                        }
+                    }
+                });
+    }
+
+    private void voice() {
         chatBt.setOnTouchListener(new View.OnTouchListener() {
+
 
             private String filePath;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                int x = (int) event.getX();// 获得x轴坐标
+                int y = (int) event.getY();// 获得y轴坐标
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         startVoiceT = System.currentTimeMillis();
@@ -225,6 +341,17 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
                             MyToast.getInstance().makeText("No SDCard");
                             return false;
                         } else {
+
+                            //点击PopupWindow的外部消失PopupWindow
+                            // pw.setOutsideTouchable(true);
+                            //设置动画
+                            // pw.setAnimationStyle(R.style.Animation);
+                            //点击返回键让PopupWindow消失
+                            //  pw.setFocusable(true);
+                            textView.setText("上滑取消发送");
+                            cancel.setVisibility(View.GONE);
+                            line.setVisibility(View.VISIBLE);
+                            pw.showAtLocation(getWindow().getDecorView(), Gravity.CENTER, 0, 0);
                             filePath = Environment.getExternalStorageDirectory() + File.separator + SDCardUtils.DLIAO;
                             System.out.println("filePath:" + filePath);
                             File file = new File(filePath + "/");
@@ -243,169 +370,78 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
                         }
                         break;
                     case MotionEvent.ACTION_UP:
-                        Log.d("ChatActivity", "startVoiceT:" + startVoiceT);
-                        long endVoiceT = System.currentTimeMillis();
-                        Log.d("ChatActivity", "endVoiceT:" + endVoiceT);
+                        pw.dismiss();
+                        if (flag) {
+                            Log.d("ChatActivity", "startVoiceT:" + startVoiceT);
+                            long endVoiceT = System.currentTimeMillis();
+                            Log.d("ChatActivity", "endVoiceT:" + endVoiceT);
+                            int time = (int) ((endVoiceT - startVoiceT));
+                            Log.d("ChatActivity", "time:" + time);
+                            if (time < 1000) {
+                                MyToast.getInstance().makeText("录制时间不能小于1秒哦");
+                                return false;
+                            } else {
+                                recorderInstance.setRecording(false);
+                                System.out.println("fileName = " + new File(fileName).length());
+                                EMMessage message = EMMessage.createVoiceSendMessage(fileName, time, chatId + "");
+                                EMClient.getInstance().chatManager().sendMessage(message);
+                                Log.d("ChatActivity", "message:" + message);
+                                list.add(message);
+                                chatRecycler.scrollToPosition(adapter.getItemCount() - 1);
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
 
-                        int time = (int) ((endVoiceT - startVoiceT));
-                        Log.d("ChatActivity", "time:" + time);
-                        if (time < 1000) {
-                            MyToast.getInstance().makeText("录制时间不能小于1秒哦");
-                            return false;
+
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        if (wantToCancle(x, y)) {
+                            flag = false;
+                            textView.setText("松开取消发送");
+                            cancel.setVisibility(View.VISIBLE);
+                            line.setVisibility(View.GONE);
+                            // recorderInstance.setRecording(false);
                         } else {
-                            recorderInstance.setRecording(false);
-                            System.out.println("fileName = " + new File(fileName).length());
-                            EMMessage message = EMMessage.createVoiceSendMessage(fileName, time, chatId + "");
-                            EMClient.getInstance().chatManager().sendMessage(message);
-                            Log.d("ChatActivity", "message:" + message);
-                            list.add(message);
-                            chatRecycler.scrollToPosition(adapter.getItemCount() - 1);
-                            adapter.notifyDataSetChanged();
+                            flag = true;
+                            textView.setText("上滑取消发送");
+                            cancel.setVisibility(View.GONE);
+                            line.setVisibility(View.VISIBLE);
                         }
                         break;
-//                    case MotionEvent.ACTION_MOVE:
-//                        MyToast.getInstance().makeText("移动取消发送");
-//                        recorderInstance.stopRecoding();
-//                        break;
                 }
                 return false;
             }
+
+
         });
-        chatPlus.setOnClickListener(new View.OnClickListener() {
-
-
-            @Override
-            public void onClick(View v) {
-                setKeyBoardModelPan();
-                Log.d("ChatActivity", "((CheckBox) v).isChecked():" + ((CheckBox) v).isChecked());
-                if (chatVoice.isChecked()) {
-                    chatVoice.setChecked(false);
-                    chatBt.setVisibility(View.GONE);
-                    btn_voice = false;
-                    chatEt.setVisibility(View.VISIBLE);
-                }
-                if (((CheckBox) v).isChecked()) {
-                    hidenKeyBoard(chatEt);
-                    chatPlusView.setVisibility(View.VISIBLE);
-                    if (buttomLayoutView.getVisibility()!=View.GONE){
-                        buttomLayoutView.setVisibility(View.GONE);
-                    }
-
-                    chatRecycler.scrollToPosition(adapter.getItemCount() - 1);
-
-
-                    chatExpress.setChecked(false);
-
-
-                } else {
-                    chatPlusView.setVisibility(View.GONE);
-                    if (buttomLayoutView.getVisibility()!=View.GONE){
-                        buttomLayoutView.setVisibility(View.GONE);
-                    }
-
-                }
-
-            }
-        });
-        userId = PreferencesUtils.getValueByKey(this, "userId", 1);
-        setKeyBoardModelResize();
-        String chatUserName = PreferencesUtils.getValueByKey(this, "chatUserName", "");
-        chatUsername.setText(chatUserName);
-        receive();
-//        RxView.touches(chatBt).throttleFirst(1, TimeUnit.MILLISECONDS)
-//                .subscribeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<MotionEvent>() {
-//                    @Override
-//                    public void accept(@NonNull MotionEvent motionEvent) throws Exception {
-//                       String filePath;
-//                        switch (motionEvent.getAction()) {
-//                            case MotionEvent.ACTION_DOWN:
-//                                startVoiceT = System.currentTimeMillis();
-//                                if (!Environment.getExternalStorageDirectory().exists()) {
-//                                    MyToast.getInstance().makeText("No SDCard");
-//                                    return;
-//                                } else {
-//                                    filePath = Environment.getExternalStorageDirectory() + File.separator + SDCardUtils.DLIAO;
-//                                    System.out.println("filePath:" + filePath);
-//                                    File file = new File(filePath + "/");
-//                                    System.out.println("file:" + file);
-//
-//                                    if (!file.exists()) {
-//                                        file.mkdirs();
-//                                    }
-//
-//                                    fileName = file + File.separator + System.currentTimeMillis() + ".spx";
-//                                    System.out.println("保存文件名：＝＝ " + fileName);
-//                                    recorderInstance = new SpeexRecorder(fileName, handler);
-//                                    Thread th = new Thread(recorderInstance);
-//                                    th.start();
-//                                    recorderInstance.setRecording(true);
-//                                }
-//                                break;
-//                            case MotionEvent.ACTION_UP:
-//                                Log.d("ChatActivity", "startVoiceT:" + startVoiceT);
-//                                long endVoiceT = System.currentTimeMillis();
-//                                Log.d("ChatActivity", "endVoiceT:" + endVoiceT);
-//
-//                                flag = 1;
-//                                int time = (int) ((endVoiceT - startVoiceT));
-//                                Log.d("ChatActivity", "time:" + time);
-//                                if (time < 1000) {
-//                                    MyToast.getInstance().makeText("录制时间不能小于1秒哦");
-//                                    return;
-//                                } else {
-//                                    recorderInstance.setRecording(false);
-//                                    System.out.println("fileName = " + new File(fileName).length());
-//                                    EMMessage message = EMMessage.createVoiceSendMessage(fileName, time, chatId + "");
-//                                    EMClient.getInstance().chatManager().sendMessage(message);
-//                                    Log.d("ChatActivity", "message:" + message);
-//                                    list.add(message);
-//                                    chatRecycler.scrollToPosition(adapter.getItemCount() - 1);
-//                                    adapter.notifyDataSetChanged();
-//                                }
-//                                break;
-////                    case MotionEvent.ACTION_MOVE:
-////                        MyToast.getInstance().makeText("移动取消发送");
-////                        recorderInstance.stopRecoding();
-////                        break;
-//                        }
-//                    //    return false;
-//
-//                    }
-//                });
-        RxView.clicks(chatVoice).throttleFirst(1, TimeUnit.MILLISECONDS)
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(@NonNull Object o) throws Exception {
-                        setKeyBoardModelResize();
-                        if (chatVoice.isChecked()) {
-                            chatBt.setVisibility(View.VISIBLE);
-                            btn_voice = true;
-                            chatEt.setVisibility(View.GONE);
-                            hidenKeyBoard(chatEt);
-                            if (buttomLayoutView.getVisibility()==View.VISIBLE) {
-                                buttomLayoutView.setVisibility(View.GONE);
-                                chatExpress.setChecked(false);
-                                chatPlus.setChecked(false);
-                            }
-                            if (chatPlusView.getVisibility()==View.VISIBLE) {
-                                chatPlusView.setVisibility(View.GONE);
-                                chatExpress.setChecked(false);
-                                chatPlus.setChecked(false);
-                            }
-                        } else {
-                            chatBt.setVisibility(View.GONE);
-                            btn_voice = false;
-                            chatEt.setVisibility(View.VISIBLE);
-                            // showKeyBoard(chatEt);
-                            showKeyBoard(chatEt);
-                            //  chatEt.setFocusable(true);
-                        }
-                    }
-                });
     }
 
+    private boolean wantToCancle(int x, int y) {
+        if (x < 0 || x > chatBt.getWidth()) { // 超过按钮的宽度
+            return true;
+        }
+        // 超过按钮的高度
+        if (y < -DISTANCE_Y_CANCEL || y > chatBt.getHeight() + DISTANCE_Y_CANCEL) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void initPopup() {
+        View view = View.inflate(ChatActivity.this, R.layout.pop_voice_layout, null);
+        view.setBackgroundResource(R.drawable.sp_popup);
+        view.setAlpha(0.8f);
+        textView = (TextView) view.findViewById(R.id.voice_text);
+        voice_db = (ImageView) view.findViewById(R.id.voice_db);
+        cancel = (ImageView) view.findViewById(R.id.voice_cancel);
+        line = (LinearLayout) view.findViewById(R.id.voice_line);
+
+        //创建PopupWindow
+
+        pw = new PopupWindow(view, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        //   pw.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.toast_color)));
+    }
 
     private void editTextListen() {
         chatEt.addTextChangedListener(new TextWatcher() {
@@ -444,7 +480,7 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) chatPlusView.getLayoutParams();
         //  LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) emojiconMenu.getLayoutParams();
         params.height = keyHeight;
-        layoutParams.height=keyHeight;
+        layoutParams.height = keyHeight;
         buttomLayoutView.setLayoutParams(params);
         chatPlusView.setLayoutParams(layoutParams);
     }
@@ -506,7 +542,6 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
             //动态修改底部view 的高度 (表情 符号 view 的高度)
 
 
-
             if (emojiconGroupList == null) {
                 emojiconGroupList = new ArrayList<>();
                 emojiconGroupList.add(new EaseEmojiconGroupEntity(R.mipmap.emoji_1, Arrays.asList(EaseDefaultEmojiconDatas.getData())));
@@ -544,6 +579,8 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
 
     @Override
     public void OnKeyBoardPop(int keyBoardheight) {
+        chatExpress.setChecked(false);
+        chatPlus.setChecked(false);
         int keyHeight = PreferencesUtils.getValueByKey(this, "kh", 300);
         if (keyHeight != keyBoardheight) {
             PreferencesUtils.addConfigInfo(this, "kh", keyBoardheight);
@@ -577,7 +614,7 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
 
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             System.out.println("chatTitle = onBack KEYCODE_BACK");
-            if (buttomLayoutView.getVisibility()==View.VISIBLE||chatPlusView.getVisibility()==View.VISIBLE) {
+            if (buttomLayoutView.getVisibility() == View.VISIBLE || chatPlusView.getVisibility() == View.VISIBLE) {
                 buttomLayoutView.setVisibility(View.GONE);
                 chatPlusView.setVisibility(View.GONE);
                 chatExpress.setChecked(false);
@@ -720,7 +757,7 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
         adapter.destory();
     }
 
-    @OnClick({R.id.chat_back, R.id.chat_user_info, R.id.chat_btn_sendtext,R.id.chat_video})
+    @OnClick({R.id.chat_back, R.id.chat_user_info, R.id.chat_btn_sendtext, R.id.chat_video})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.chat_back:
@@ -733,38 +770,38 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
                 chatEt.setText("");
                 break;
             case R.id.chat_video:
-                TelActivity.startTelActivity(1,chatId+"",ChatActivity.this);
-                toActivity(TelActivity.class,null,0);
+                TelActivity.startTelActivity(1, chatId + "", ChatActivity.this);
+                toActivity(TelActivity.class, null, 0);
                 break;
         }
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            View v = getCurrentFocus();
-            if (isShouldHideKeyboard(v, ev)) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-            }
-        }
-        return super.dispatchTouchEvent(ev);
-    }
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+//            View v = getCurrentFocus();
+//            if (isShouldHideKeyboard(v, ev)) {
+//                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//            }
+//        }
+//        return super.dispatchTouchEvent(ev);
+//    }
 
-    // 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘
-    public static boolean isShouldHideKeyboard(View v, MotionEvent event) {
-        if (v != null && (v instanceof EditText)) {
-            int[] l = {0, 0};
-            v.getLocationInWindow(l);
-            int left = l[0],
-                    top = l[1],
-                    bottom = top + v.getHeight(),
-                    right = left + v.getWidth();
-            return !(event.getX() > left && event.getX() < right
-                    && event.getY() > top && event.getY() < bottom);
-        }
-        return false;
-    }
+//    // 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘
+//    public static boolean isShouldHideKeyboard(View v, MotionEvent event) {
+//        if (v != null && (v instanceof EditText)) {
+//            int[] l = {0, 0};
+//            v.getLocationInWindow(l);
+//            int left = l[0],
+//                    top = l[1],
+//                    bottom = top + v.getHeight(),
+//                    right = left + v.getWidth();
+//            return !(event.getX() > left && event.getX() < right
+//                    && event.getY() > top && event.getY() < bottom);
+//        }
+//        return false;
+//    }
 
 
 }

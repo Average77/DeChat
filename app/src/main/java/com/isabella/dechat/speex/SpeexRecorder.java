@@ -4,6 +4,8 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 
 public class SpeexRecorder implements Runnable {
 	private Handler mHandler;
@@ -71,11 +73,18 @@ public class SpeexRecorder implements Runnable {
 				} else if (bufferRead == AudioRecord.ERROR_INVALID_OPERATION) {
 					throw new IllegalStateException("read() returned AudioRecord.ERROR_INVALID_OPERATION");
 				}
+
 				encoder.putData(tempBuffer, bufferRead);
 				getAmplitude(tempBuffer, bufferRead);
+				Message message = new Message();
+				message.what = 250;
+				message.obj = gdb;
+				mHandler.handleMessage(message);
+
 			}
 			recordInstance.stop();
 			recordInstance.release();
+
 			recordInstance = null;
 			encoder.setRecording(false);
 
@@ -86,7 +95,7 @@ public class SpeexRecorder implements Runnable {
 				recordInstance = null;
 			}
 			e.printStackTrace();
-		} 
+		}
 
 	}
 
@@ -127,5 +136,6 @@ public class SpeexRecorder implements Runnable {
 			v += tempBuffer[i] * tempBuffer[i];
 		}
 		gdb = 10 * Math.log10(v / (double) bufferRead);
+		Log.d("SpeexRecorder", "gdb:" + gdb);
 	}
 }
