@@ -14,7 +14,7 @@ public class SpeexPlayer {
 	private Handler handler ;
 	private long sendtimer ;
 	private long atimer ;
-
+	boolean isPlay = false;
 
 	public SpeexPlayer(String fileName,Handler handler) {
 
@@ -31,19 +31,28 @@ public class SpeexPlayer {
 
 	public void startPlay() {
 		RecordPlayThread rpt = new RecordPlayThread();
-
-		Thread th = new Thread(rpt);
+        isPlay=true;
+		Thread th = new  Thread(rpt);
 		th.start();
 	}
 	
 	public void stopPlay(boolean release){
 		speexdec.isStop = true ;
+		isPlay=false;
 		speexdec.releaseMusic = release;
 		System.err.println("stopPlay stop ");
 
 	}
 
-	boolean isPlay = true;
+
+
+	public boolean isPlay() {
+		return isPlay;
+	}
+
+	public void setPlay(boolean play) {
+		isPlay = play;
+	}
 
 	class RecordPlayThread extends Thread {
 

@@ -57,7 +57,7 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private SpeexPlayer player;
     private SpeexPlayer player1;
     private final int widthPixels;
-
+    static  String msgId=null;
     public ChatMsgAdapter(Context context, List<EMMessage> list) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
@@ -219,21 +219,22 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     right.voice.setPadding(10,0,widthPixels-350,0);
                 }
             }
+            right.voice.setImageDrawable(drawable);
             RxView.clicks(right.voice).throttleFirst(1, TimeUnit.MILLISECONDS)
                     .subscribeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<Object>() {
                         @Override
                         public void accept(@NonNull Object o) throws Exception {
-                            right.voice.setImageDrawable(drawable);
-                            if (!drawable.isRunning()) {
+
+                            if (!player.isPlay()) {
                                 for (int i = 0; i < list.size(); i++) {
                                     if (list.get(i).getType() == EMMessage.Type.VOICE) {
                                         if (i != position) {
-                                            if (drawable.isRunning()) {
+                                            if (player.isPlay()) {
                                                 player.stopPlay(true);
                                                 drawable.stop();
                                                 right.voice.setImageResource(R.drawable.send_voice_icon_3);
-                                            } else if (drawable1.isRunning()) {
+                                            } else if (player1.isPlay()) {
                                                 player1.stopPlay(true);
                                                 drawable1.stop();
                                             }
@@ -243,12 +244,13 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                                 drawable.start();
                                 player.startPlay();
                                 handler.sendEmptyMessageDelayed(1, voiceBody.getLength());
-                            } else {
+                            }else{
                                 drawable.stop();
                                 player.stopPlay(true);
                                 right.voice.setImageResource(R.drawable.send_voice_icon_3);
                             }
                         }
+
                     });
             if (mOnItemClickListener != null) {
                 //为ItemView设置监听器

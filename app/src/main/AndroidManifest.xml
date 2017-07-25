@@ -25,7 +25,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".base.IApplication"
@@ -119,9 +119,11 @@
 
         <activity
             android:name=".activity.ChatActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
-        <activity android:name=".activity.TelActivity" android:launchMode="singleInstance"/>
-
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".activity.TelActivity"
+            android:launchMode="singleInstance" />
+        <activity android:name=".activity.TestActivity"></activity>
     </application>
 
 </manifest>

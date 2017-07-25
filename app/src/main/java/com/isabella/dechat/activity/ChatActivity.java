@@ -119,7 +119,12 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
                     Log.d("ChatActivity", "msg.obj:" + msg.obj);
                     // if (msg.obj instanceof  Double) {
                     final double gb = (double) msg.obj;
-                    setLevel(gb);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setLevel(gb);
+                        }
+                    });
 
                     // }
                     break;
@@ -787,7 +792,7 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
 //        }
 //        return super.dispatchTouchEvent(ev);
 //    }
-
+//
 //    // 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘
 //    public static boolean isShouldHideKeyboard(View v, MotionEvent event) {
 //        if (v != null && (v instanceof EditText)) {
@@ -797,8 +802,7 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
 //                    top = l[1],
 //                    bottom = top + v.getHeight(),
 //                    right = left + v.getWidth();
-//            return !(event.getX() > left && event.getX() < right
-//                    && event.getY() > top && event.getY() < bottom);
+//            return event.getY() > top ;
 //        }
 //        return false;
 //    }

@@ -122,6 +122,20 @@ public class MainActivity extends BaseActivity<LoginContact.LoginView,LoginPrese
 
         }
         incoming();
+//        HeadsUpManager manage = HeadsUpManager.getInstant(getApplication());
+//        HeadsUp.Builder builder = new HeadsUp.Builder(MainActivity.this);
+//        builder.setContentTitle("提醒").setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS)
+//                //要显示通知栏通知,这个一定要设置
+//                .setSmallIcon()
+//                .setContentText("你有新的消息")
+//                //2.3 一定要设置这个参数,否则会报错
+//                .setContentIntent(pendingIntent)
+//                //设置是否显示 action 按键
+//                .setUsesChronometer(true)
+//                .addAction(R.drawable.ic_cloud_queue_black_24dp, "查看", pendingIntent);
+//
+//        HeadsUp headsUp = builder.buildHeadUp();
+//        manage.notify(code++, headsUp);
     }
     private void InputType(View view) {
         //判断输入法的隐藏状态

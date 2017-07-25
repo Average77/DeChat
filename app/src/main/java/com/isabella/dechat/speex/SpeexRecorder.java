@@ -26,7 +26,7 @@ public class SpeexRecorder implements Runnable {
 
 	public void run() {
 
-		try {
+//		try {
 			 encoder = new SpeexEncoder(this.fileName);
 			Thread encodeThread = new Thread(encoder);
 			encoder.setRecording(true);
@@ -88,14 +88,14 @@ public class SpeexRecorder implements Runnable {
 			recordInstance = null;
 			encoder.setRecording(false);
 
-		} catch (Exception e) {
-
-			if(recordInstance != null){
-				recordInstance.release();
-				recordInstance = null;
-			}
-			e.printStackTrace();
-		}
+//		} catch (Exception e) {
+//
+//			if(recordInstance != null){
+//				recordInstance.release();
+//				recordInstance = null;
+//			}
+//			e.printStackTrace();
+//		}
 
 	}
 
