@@ -23,12 +23,19 @@ public class UploadPresenter extends BasePresenter<UploadContact.UploadView> {
         uploadModerImlp.getData(file, new UploadContact.UploadModelImplResult() {
             @Override
             public void success(UploadPhotoBean uploadPhotoBean) {
-                view.success(uploadPhotoBean);
+                try {
+                    view.success(uploadPhotoBean);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-
             @Override
             public void failed(Throwable e) {
-                view.failed(e);
+                try {
+                    view.failed(e);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
             }
         });
     }

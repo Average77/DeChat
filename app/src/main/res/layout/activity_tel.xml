@@ -2,11 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/open_photo_temp16"
     android:orientation="vertical">
 
     <com.hyphenate.media.EMCallSurfaceView
         android:id="@+id/tel_me_surface"
-        android:layout_width="110dp"
+        android:layout_width="115dp"
         android:layout_height="150dp" />
 
     <com.hyphenate.media.EMCallSurfaceView
@@ -19,6 +20,24 @@
     android:layout_centerInParent="true"
     android:text="正在等待对方接听..."
     android:id="@+id/tel_text"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tel_qie_huan"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        android:src="@mipmap/ic_qie_huan"
+        />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tel_jie_tu"
+        android:layout_toLeftOf="@id/tel_qie_huan"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        android:src="@mipmap/ic_jie_tu"
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

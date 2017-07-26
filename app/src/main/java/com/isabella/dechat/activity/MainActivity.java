@@ -64,6 +64,8 @@ public class MainActivity extends BaseActivity<LoginContact.LoginView,LoginPrese
 
     };
   LoginPresenter loginPresenter=new LoginPresenter();
+    private String type;
+    private String from;
     @Override
     public LoginPresenter initPresenter() {
         return loginPresenter;
@@ -201,17 +203,19 @@ public class MainActivity extends BaseActivity<LoginContact.LoginView,LoginPrese
     }
     private class CallReceiver extends BroadcastReceiver {
 
+
+
         @Override
         public void onReceive(Context context, Intent intent) {
             // 拨打方username
-            String from = intent.getStringExtra("from");
+            from = intent.getStringExtra("from");
             // call type
-            String type = intent.getStringExtra("type");
+            type = intent.getStringExtra("type");
             //跳转到通话页面
 
             IApplication.ring();
 
-            TelActivity.startTelActivity(2,from,MainActivity.this);
+            TelActivity.startTelActivity(2, from,MainActivity.this);
 
 
         }

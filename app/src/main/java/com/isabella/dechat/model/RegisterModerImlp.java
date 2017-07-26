@@ -49,24 +49,26 @@ public class RegisterModerImlp implements RegisterContact.RegisterModel {
                 Log.d("RegisterModerImlp", result);
                 RegisterBean bean = GsonUtil.getInstance().fromJson(result, RegisterBean.class);
                 registerModelImplResult.success(bean);
-                EMClient.getInstance().login(bean.getData().getUserId()+"",bean.getData().getYxpassword(),new EMCallBack() {//回调
-                    @Override
-                    public void onSuccess() {
-                        EMClient.getInstance().groupManager().loadAllGroups();
-                        EMClient.getInstance().chatManager().loadAllConversations();
-                        Log.d("main", "登录聊天服务器成功！");
-                    }
+                if (bean.getResult_code()==200){
+                    EMClient.getInstance().login(bean.getData().getUserId()+"",bean.getData().getYxpassword(),new EMCallBack() {//回调
+                        @Override
+                        public void onSuccess() {
+                            EMClient.getInstance().groupManager().loadAllGroups();
+                            EMClient.getInstance().chatManager().loadAllConversations();
+                            Log.d("main", "登录聊天服务器成功！");
+                        }
 
-                    @Override
-                    public void onProgress(int progress, String status) {
+                        @Override
+                        public void onProgress(int progress, String status) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onError(int code, String message) {
-                        Log.d("main", "登录聊天服务器失败！");
-                    }
-                });
+                        @Override
+                        public void onError(int code, String message) {
+                            Log.d("main", "登录聊天服务器失败！");
+                        }
+                    });
+                }
             }
 
             @Override

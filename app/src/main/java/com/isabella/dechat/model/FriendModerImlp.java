@@ -8,7 +8,7 @@ import com.isabella.dechat.dao.FriendListDataBeanDao;
 import com.isabella.dechat.network.BaseObserver;
 import com.isabella.dechat.network.RetrofitManager;
 import com.isabella.dechat.util.GsonUtil;
-import com.socks.library.KLog;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +68,6 @@ public class FriendModerImlp implements FriendContact.FriendModel{
                 FriendListBean friendListBean = GsonUtil.getInstance().fromJson(result, FriendListBean.class);
                if (friendListBean.getResult_code()==200) {
                     final List<FriendListDataBean> date = friendListBean.getData();
-                    KLog.w(date);
                     friendModelImplResult.success(date, false);
                     Observable.create(new ObservableOnSubscribe<Long>() {
                         @Override

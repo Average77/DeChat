@@ -36,7 +36,6 @@ import com.isabella.dechat.widget.sort.sortlist.SortModel;
 import com.liaoinstan.springview.container.MeituanFooter;
 import com.liaoinstan.springview.container.MeituanHeader;
 import com.liaoinstan.springview.widget.SpringView;
-import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -212,7 +211,6 @@ public class FriendFragment extends BaseFragment<FriendContact.FriendView, Frien
         if (date == null || date.size() == 0) {
             return;
         }
-        KLog.a(date);
         if (temp) {
             list.clear();
             SourceDateList.clear();

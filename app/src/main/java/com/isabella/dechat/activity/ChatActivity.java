@@ -117,7 +117,7 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
                     break;
                 case 250:
                     Log.d("ChatActivity", "msg.obj:" + msg.obj);
-                    // if (msg.obj instanceof  Double) {
+                    // if (msg.obj inst anceof  Double) {
                     final double gb = (double) msg.obj;
                     runOnUiThread(new Runnable() {
                         @Override
@@ -144,6 +144,8 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
     private ImageView cancel;
     private LinearLayout line;
     private static final int DISTANCE_Y_CANCEL = 50;
+    private String substring;
+    private String substring1;
 
     public void setLevel(double gb) {
         if (gb < 40) {
@@ -421,6 +423,8 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
         });
     }
 
+
+
     private boolean wantToCancle(int x, int y) {
         if (x < 0 || x > chatBt.getWidth()) { // 超过按钮的宽度
             return true;
@@ -670,7 +674,25 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
 
 
         Log.d("ChatActivity", "chatId:" + chatId);
-        EMMessage emMessage = EMMessage.createTxtSendMessage(chatEt.getText().toString(), chatId + "");
+        String s = chatEt.getText().toString();
+        isLength(s);
+
+
+    }
+
+    private void isLength(String s) {
+        if (s.length()>500){
+            substring = s.substring(0, 500);
+            substring1 = s.substring(500);
+            setText(substring);
+            isLength(substring1);
+        }else{
+            setText(s);
+        }
+    }
+
+    private void setText(String s) {
+        EMMessage emMessage = EMMessage.createTxtSendMessage(s, chatId + "");
         EMClient.getInstance().chatManager().sendMessage(emMessage);
 
         emMessage.setMessageStatusCallback(new EMCallBack() {
@@ -694,7 +716,6 @@ public class ChatActivity extends IActivity implements KeyBoardHelper.OnKeyBoard
         adapter.notifyDataSetChanged();
         //   chatListview.setSelection(chatListview.getBottom());
         chatRecycler.scrollToPosition(adapter.getItemCount() - 1);
-
     }
 
 

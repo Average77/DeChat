@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hyphenate.chat.EMCallManager;
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.EMNoActiveCallException;
@@ -18,10 +20,16 @@ import com.hyphenate.exceptions.EMServiceNotReadyException;
 import com.hyphenate.media.EMCallSurfaceView;
 import com.isabella.dechat.R;
 import com.isabella.dechat.base.IApplication;
+import com.isabella.dechat.util.SDCardUtils;
+import com.isabella.dechat.widget.MyToast;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.superrtc.sdk.VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill;
 
 
 /**
@@ -50,7 +58,13 @@ public class TelActivity extends Activity {
     EMCallSurfaceView surfaceBig;
     @BindView(R.id.tel_me_surface)
     EMCallSurfaceView surfaceSmall;
-
+    static boolean temp;
+    @BindView(R.id.tel_qie_huan)
+    ImageView telQieHuan;
+    boolean isClick = false;
+    @BindView(R.id.tel_jie_tu)
+    ImageView telJieTu;
+    private EMCallManager.EMVideoCallHelper callHelper;
 
     public static void startTelActivity(int type, String uid, Context context) {
 
@@ -69,7 +83,7 @@ public class TelActivity extends Activity {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);//隐藏状态栏
         setContentView(R.layout.activity_tel);
         ButterKnife.bind(this);
-
+        temp = true;
 
         type = getIntent().getExtras().getInt("type");
 
@@ -81,13 +95,32 @@ public class TelActivity extends Activity {
         surfaceSmall.getHolder().setFormat(PixelFormat.TRANSPARENT);
         surfaceSmall.setZOrderOnTop(true);
 
+        surfaceBig.setScaleMode(EMCallViewScaleModeAspectFill);
         EMClient.getInstance().callManager().setSurfaceView(surfaceSmall, surfaceBig);
+        surfaceBig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isClick) {
+                    EMClient.getInstance().callManager().setSurfaceView(surfaceBig, surfaceSmall);
+                    isClick = true;
+                }
+                {
+                    EMClient.getInstance().callManager().setSurfaceView(surfaceSmall, surfaceBig);
+                    isClick = false;
+                }
+            }
+        });
 
         if (type == 1) {
             //拨打电话
             telActivityAccept.setVisibility(View.GONE);
             telActivityDisaccept.setVisibility(View.GONE);
             telActivityHandup.setVisibility(View.VISIBLE);
+
+            telJieTu.setVisibility(View.GONE);
+            telQieHuan.setVisibility(View.GONE);
+            surfaceBig.setVisibility(View.INVISIBLE);
+            surfaceSmall.setVisibility(View.INVISIBLE);
             try {
 
 
@@ -105,11 +138,31 @@ public class TelActivity extends Activity {
             telActivityAccept.setVisibility(View.VISIBLE);
             telActivityDisaccept.setVisibility(View.VISIBLE);
 
+            telJieTu.setVisibility(View.GONE);
+            telQieHuan.setVisibility(View.GONE);
+            surfaceBig.setVisibility(View.INVISIBLE);
+            surfaceSmall.setVisibility(View.INVISIBLE);
+
 
         }
 
         addListener();
-
+        telQieHuan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EMClient.getInstance().callManager().switchCamera();
+            }
+        });
+        callHelper = EMClient.getInstance().callManager().getVideoCallHelper();
+        telJieTu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               String filePath = Environment.getExternalStorageDirectory() + File.separator + SDCardUtils.DLIAO;
+                callHelper.takePicture(filePath);
+                MyToast.getInstance().makeText("截图成功");
+            }
+        });
+        EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(true);
 
     }
 
@@ -151,7 +204,10 @@ public class TelActivity extends Activity {
                                 telActivityHandup.setVisibility(View.VISIBLE);
                                 telActivityAccept.setVisibility(View.GONE);
                                 telActivityDisaccept.setVisibility(View.GONE);
-
+                                telQieHuan.setVisibility(View.VISIBLE);
+                                telJieTu.setVisibility(View.VISIBLE);
+                                surfaceBig.setVisibility(View.VISIBLE);
+                                surfaceSmall.setVisibility(View.VISIBLE);
                                 telActivityHint.setText("通话中");
 
                             }
@@ -201,6 +257,11 @@ public class TelActivity extends Activity {
                         telActivityAccept.setVisibility(View.VISIBLE);
                         telActivityDisaccept.setVisibility(View.VISIBLE);
                         telActivityHandup.setVisibility(View.GONE);
+
+                        telJieTu.setVisibility(View.GONE);
+                        telQieHuan.setVisibility(View.GONE);
+                        surfaceBig.setVisibility(View.INVISIBLE);
+                        surfaceSmall.setVisibility(View.INVISIBLE);
                         EMClient.getInstance().callManager().answerCall();
                     } else {
 
@@ -249,8 +310,23 @@ public class TelActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        surfaceBig=null;
-        surfaceSmall=null;
-         EMClient.getInstance().callManager().clearRtcConnection();
+        surfaceBig.release();
+        surfaceSmall .release();
+        EMClient.getInstance().callManager().clearRtcConnection();
+        EMClient.getInstance().callManager().clearRenderView();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        temp = false;
+        try {
+            EMClient.getInstance().callManager().endCall();
+        } catch (EMNoActiveCallException e) {
+            e.printStackTrace();
+        } finally {
+            finish();
+        }
+
     }
 }

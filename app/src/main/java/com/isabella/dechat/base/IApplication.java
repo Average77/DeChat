@@ -13,7 +13,6 @@ import com.isabella.dechat.R;
 import com.isabella.dechat.dao.DaoMaster;
 import com.isabella.dechat.dao.DaoSession;
 import com.mob.MobApplication;
-import com.socks.library.KLog;
 import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 
@@ -56,7 +55,6 @@ public class IApplication extends MobApplication {
         greenDaoInit();
         leakcanarayInit();
         frescoInit();
-        kLogInit();
         int pid = android.os.Process.myPid();
         String processAppName = getAppName(pid);
 // 如果APP启用了远程的service，此application:onCreate会被调用2次
@@ -99,9 +97,6 @@ public class IApplication extends MobApplication {
         Fresco.initialize(this);
     }
 
-    private void kLogInit() {
-        KLog.init(true);
-    }
 
     public static IApplication getApplication() {
         if (application == null) {
